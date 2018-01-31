@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v16.9.4                     
 ******************************************************************************
->> Linked Wed Jan 31 14:02:47 2018
+>> Linked Wed Jan 31 15:31:11 2018
 
 OUTPUT FILE NAME:   <rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs.out>
 ENTRY POINT SYMBOL: "ResetISR"  address: 00004141

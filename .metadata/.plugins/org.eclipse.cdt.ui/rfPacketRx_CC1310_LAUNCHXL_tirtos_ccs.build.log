@@ -1,0 +1,7 @@
+
+**** Build of configuration Debug for project rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs ****
+
+"C:\\ti\\ccsv7\\utils\\bin\\gmake" -k -j 8 all -O 
+gmake[1]: 'rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs.out' is up to date.
+
+**** Build Finished ****
