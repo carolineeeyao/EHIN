@@ -149,12 +149,14 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     while(1)
     {
         /* Create packet with incrementing sequence number and random payload */
-        packet[0] = (uint8_t)(seqNumber >> 8);
-        packet[1] = (uint8_t)(seqNumber++);
+//        packet[0] = (uint8_t)(seqNumber >> 8);
+//        packet[1] = (uint8_t)(seqNumber++);
+        packet[0] = 1;
+        packet[1] = 1;
         uint8_t i;
         for (i = 2; i < PAYLOAD_LENGTH; i++)
         {
-            packet[i] = rand();
+            packet[i] = 0;
         }
 
         /* Set absolute TX time to utilize automatic power management */
