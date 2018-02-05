@@ -9,10 +9,10 @@
  */
 
 
--l"C:\Users\carol\workspace_v7\tirtos_builds_CC1310_LAUNCHXL_release_ccs\Debug\configPkg\package\cfg\release_pem3.oem3"
--l"C:\Users\carol\workspace_v7\tirtos_builds_CC1310_LAUNCHXL_release_ccs\src\sysbios\rom_sysbios.aem3"
--l"C:\ti\simplelink_cc13x0_sdk_1_50_00_08\kernel\tirtos\packages\ti\targets\arm\rtsarm\lib\boot.aem3"
--l"C:\ti\simplelink_cc13x0_sdk_1_50_00_08\kernel\tirtos\packages\ti\targets\arm\rtsarm\lib\auto_init.aem3"
+-l"/Users/andrewphung/workspace_v7/tirtos_builds_CC1310_LAUNCHXL_release_ccs/Debug/configPkg/package/cfg/release_pem3.oem3"
+-l"/Users/andrewphung/workspace_v7/tirtos_builds_CC1310_LAUNCHXL_release_ccs/src/sysbios/rom_sysbios.aem3"
+-l"/Users/andrewphung/ti/simplelink_cc13x0_sdk_1_60_00_21/kernel/tirtos/packages/ti/targets/arm/rtsarm/lib/boot.aem3"
+-l"/Users/andrewphung/ti/simplelink_cc13x0_sdk_1_60_00_21/kernel/tirtos/packages/ti/targets/arm/rtsarm/lib/auto_init.aem3"
 
 --retain="*(xdc.meta)"
 
@@ -101,13 +101,11 @@ ti_sysbios_family_arm_m3_Hwi_nvic = 0xe000e000;
 
 /* Content from ti.sysbios (null): */
 
-/* Content from ti.sysbios.posix (null): */
-
 /* Content from ti.sysbios.gates (null): */
 
 /* Content from ti.sysbios.heaps (null): */
 
-/* Content from ti.sysbios.rom.cortexm.cc13xx (C:/ti/simplelink_cc13x0_sdk_1_50_00_08/kernel/tirtos/packages/ti/sysbios/rom/cortexm/cc13xx/golden/CC13xx/CC13xx_link_ti.xdt): */
+/* Content from ti.sysbios.rom.cortexm.cc13xx (/Users/andrewphung/ti/simplelink_cc13x0_sdk_1_60_00_21/kernel/tirtos/packages/ti/sysbios/rom/cortexm/cc13xx/golden/CC13xx/CC13xx_link_ti.xdt): */
 
 -u xdc_runtime_Error_policy__C
 -u xdc_runtime_IModule_Interface__BASE__C
@@ -675,6 +673,12 @@ SECTIONS
 }
 
 /* Content from ti.sysbios.xdcruntime (null): */
+
+/* Content from ti.sysbios.rts.ti (ti/sysbios/rts/ti/linkcmd.xdt): */
+
+/* Content from ti.posix.tirtos (null): */
+
+/* Content from ti.sysbios.posix (null): */
 
 /* Content from ti.sysbios.utils (null): */
 

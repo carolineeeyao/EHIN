@@ -1,0 +1,373 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>Sensor and Collector - TI 15.4-Stack Project Zero</title>
+<link rel="stylesheet" href="../../web_support/strapdown/v/0.2/fonts/ubuntu-regular-woff.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/fonts/glyphicons-halflings-regular.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/themes/united2.min.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/themes/bootstrap-responsive.min.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/strapdown.css"><link rel="shortcut icon" type="image/x-icon" href="../../.metadata/favicon.ico"></head>
+
+<!-- START PRE -->
+
+
+
+
+
+
+<!-- END PRE -->
+
+<body style=""><div class="container"><nav class="navbar navbar-default navbar-static-top"><div class="container-fluid"> <div class="navbar-header">  <div id="headline" class="navbar-brand">Sensor and Collector - TI 15.4-Stack Project Zero</div> </div> </div></nav><div class="container"><div class="row row-offcanvas row-offcanvas-left"><div class="col-xs-12 col-sm-9" id="content"><h1 id="introduction">Introduction</h1>
+<p>TI 15.4-Stack is an IEEE 802.15.4e/g RF communication stack. It is a main part of the SimpleLink CC13xx/CC26x2 Software Development Kits (SDK), and provides support for star-topology networks for a Sub-1GHz application or a 2.4GHz application, depending on your selected device. TI 15.4-Stack runs on MCUs from TI's SimpleLink microcontroller (MCU) family of devices. The Sub-1 GHz implementation offers several key benefits such as longer range in FCC band and better protection against in-band interference by implementing frequency hopping, as well as the ability to send 2.4GHz BLE beacon packets while operating on a Sub-1GHz TI 15.4-Stack network when using dual-band mode on the CC1352. This complete stack offering provides customers an accelerated time to market with a complete end-to-end node-to-gateway solution.</p>
+<p>In this lab, we will run a pair of examples based on the complete TI 15.4-Stack, one Sensor and one Collector - creating a star network of sensor node(s) sending data to a collector.</p>
+<ul>
+<li>The Collector Example Application implements the PAN-Coordinator, or the central node in the network. This application starts the network, allows devices to join the network, and configures the joining devices on how often to report the sensor data. It then sends periodic tracking request messages (to which it expects tracking response messages) to determine whether or not the sensor nodes are alive in the network.</li>
+<li>The Sensor Example Application implements the networked device, which joins the network started by the Collector. The Sensor periodically sends
+sensor data reports at the report interval configured by the Collector and responds to the tracking messages it receives.</li>
+</ul>
+<p>The purpose of this lab is to familiarize the users with the TI 15.4-Stack and with tools such as Code Composer Studio, by importing existing examples into the IDE. The lab contain several tasks:</p>
+<p><strong>Task 1</strong>: Building and loading the collector example</p>
+<p><strong>Task 2</strong>: Building and loading the sensor example</p>
+<p><strong>Task 3</strong>: Using the Collector and Sensor</p>
+<p><strong>Task 4</strong>: Updating the sensor's reporting rate</p>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Further reading
+</span></h4>
+<p>This lab is the recommended first step for getting started with the TI 15.4-Stack, it is intended to teach you to quickly bring up a working network. As such, many useful features in TI 15.4-Stack are not discussed here. To learn more about features such as beacon vs. non-beacon mode, frequency hopping and more, please see <strong>docs\ti154stack\ti154stack-software-developers-guide.html</strong>, under the SDK installation folder.</p>
+</div>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Technical support
+</span></h4>
+<p>For any questions you may have, please consult the relevant E2E forum - <a href="http://e2e.ti.com/support/wireless_connectivity/proprietary_sub_1_ghz_simpliciti/">TI Sub-1 GHz E2E Forum</a></p>
+</div>
+<h1 id="supported-devices-sdks">Supported Devices/SDKs</h1>
+<p>This lab is intended to be used with the newest SDKs for each of these TI devices:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th style="text-align:center">TI Device</th>
+<th style="text-align:center">SDK Version</th>
+<th>Operation Modes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">CC1310</td>
+<td style="text-align:center"><a href="http://www.ti.com/tool/SIMPLELINK-CC13X0-SDK">CC13x0 SDK v1.60</a></td>
+<td>Sub-1GHz TI 15.4-Stack</td>
+</tr>
+<tr>
+<td style="text-align:center">CC1350</td>
+<td style="text-align:center"><a href="http://www.ti.com/tool/SIMPLELINK-CC13X0-SDK">CC13x0 SDK v1.60</a></td>
+<td>Sub-1GHz TI 15.4-Stack, 2.4GHz BLE beacons</td>
+</tr>
+<tr>
+<td style="text-align:center">CC1312</td>
+<td style="text-align:center"><a href="http://www.ti.com/tool/SIMPLELINK-CC13X2-SDK">CC13x2 SDK v1.60</a></td>
+<td>Sub-1GHz TI 15.4-Stack</td>
+</tr>
+<tr>
+<td style="text-align:center">CC1352</td>
+<td style="text-align:center"><a href="http://www.ti.com/tool/SIMPLELINK-CC13X2-SDK">CC13x2 SDK v1.60</a></td>
+<td>Sub-1GHz TI 15.4-Stack, 2.4GHz TI 15.4-Stack, 2.4GHz BLE beacons</td>
+</tr>
+<tr>
+<td style="text-align:center">CC2652</td>
+<td style="text-align:center"><a href="http://www.ti.com/tool/SIMPLELINK-CC26X2-SDK">CC26x2 SDK v1.60</a></td>
+<td>2.4GHz TI 15.4-Stack</td>
+</tr>
+</tbody>
+</table>
+<h1 id="prerequisites">Prerequisites</h1>
+<h2 id="background">Background</h2>
+<ul>
+<li>Basic TI-RTOS and CCS knowledge</li>
+<li>Some basic familiarity with embedded programming.</li>
+</ul>
+<h2 id="software">Software</h2>
+<ul>
+<li><a href="http://www.ti.com/tool/ccstudio">Code Composer Studio</a> v7.4 or later<br>
+Make sure that CCS is using the latest updates: <em>Help</em> → <em>Check for Updates</em></li>
+<li>The corresponding SDK(s) from the list above</li>
+<li><a href="https://ttssh2.osdn.jp/index.html.en">Tera term</a> or any other equivalent terminal program</li>
+</ul>
+<h2 id="hardware">Hardware</h2>
+<ul>
+<li>2 x Compatible LaunchPads, refer to the <strong>Supported Devices/SDKs</strong> section</li>
+<li>2 x USB Cables</li>
+</ul>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Note
+</span></h4>
+<ul>
+<li>These labs were done using CC13x0 LaunchPads and the CC13x0 SDK, though the procedure should be the same for every supported platform.</li>
+<li>Some screenshots in this lab may have been taken with an older version of the respective SDK or tool, so your actual screen may look a bit different, however the functionality and overall look and feel should be the same.</li>
+</ul>
+</div>
+<h2 id="group-training-additional-requirements">Group training additional requirements</h2>
+<p>Make sure to always use your designated channel, to avoid interfering with other students' operations</p>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Channel allocation
+</span></h4>
+<p>    If you are part of a group training, the instructor should give each student a unique number.
+    In this lab, each student uses a designated channel matching its student number: Student #1 should use channel 1, Student #2 should use channel 2, and so on.</p>
+</div>
+<h1 id="task-0-label-your-launchpads">Task 0: Label your LaunchPads</h1>
+<ol>
+<li><p>Label each of your LaunchPads with its XDS Device ID, as described <a href="../util_identify_lp/util_identify_lp.html">here</a>.</p>
+</li>
+<li><p>Additionally, label one LaunchPad as "Sensor" and the other as "Collector". These labels will be referred to throughout this lab. It is recommended to use a non-permanent marking for this (e.g. sticky notes), as these labels may only be relevant for this specific lab.</p>
+</li>
+</ol>
+<h1 id="task-1-building-and-loading-the-collector-example">Task 1: Building and loading the collector example</h1>
+<ol>
+<li><p>In CCS, open the resource explorer (<strong>view</strong> → <strong>Resource Explorer</strong>)</p>
+</li>
+<li><p>Expand the folders and select as in the following capture, then click <strong>Import To IDE</strong>: (Note: make sure to select the appropriate collector project for your platform. e.g. if you are using CC2652, select the CC2652 collector project in the CC26x2 SDK)
+</p><div class="modal-pop" style="cursor:zoom-in;"><img src="resources/Figure3.png" alt="Resource Explorer" class="img-responsive"></div><p></p>
+</li>
+<li><p>Update the target of the collector project to associate it with the "Collector" LaunchPad - as explained <a href="../util_assign_lp_to_ccs_project/assign_lp_to_ccs_project.html">here</a>.</p>
+</li>
+<li><p>Locate the file config.h in the project explorer, and open it by double-clicking
+</p><div class="modal-pop" style="cursor:zoom-in;"><img src="resources/config_h_location.png" alt="Resource Explorer" class="img-responsive"></div><p></p>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Note
+</span></h4>
+<ul>
+<li>If you are using a Sub-1GHz project, this file will be located in the <code>Application &gt; subg</code> folder.</li>
+<li>If you are using a 2.4GHz project, this file will be located in the <code>Application &gt; 2_4g</code> folder.</li>
+</ul>
+</div>
+</li>
+<li><p>If you are using a 2.4GHz project, <strong>skip to step 6</strong>. Otherwise, in config.h, update the definition of CONFIG_PHY_ID as explained below:</p>
+<div class="bs-callout bs-callout-default "><h4><span class="glyphicon glyphicon-hand-right gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Selecting the right PHY
+</span></h4>
+<ul>
+<li>The regulations in different parts of the world require the use of different frequency bands:<ul>
+<li>915 MHz in the US</li>
+<li>868 MHz in Europe</li>
+<li>433 MHz in China
+<br><br></li>
+</ul>
+</li>
+<li>For each of the frequency bands above, TI 15.4-Stack provides selection between two operation modes:<ul>
+<li>A faster default mode (50kbps data rate)</li>
+<li>LRM - long-range mode (5kbps data rate over a longer range)
+<br><br></li>
+</ul>
+</li>
+<li>You are responsible to select the right PHY, according to the region of operation and the desired range. This is done by modifying the value of CONFIG_PHY_ID (defined in config.h) with one of the supported values from api_mac.h (see code snippets below).
+<br><br></li>
+<li><p>For this lab, please select the faster mode (50kbps) of the required frequency band. After finishing the official lab content, you may also experiment with Long Range mode (LRM).</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_1')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_1" class="lang-c hljs cpp"><span class="hljs-comment">/*! Setting for Phy ID */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> CONFIG_PHY_ID                (APIMAC_STD_US_915_PHY_1)</span>
+</code></pre><span class="code-title"><p>Example from config.h: by default, the US-compatible PHY is selected</p>
+</span></div></div>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_2')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_2" class="lang-c hljs cpp"><span class="hljs-comment">/*! PHY IDs - 915MHz US Frequency band operating mode # 1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_STD_US_915_PHY_1                 1</span>
+<span class="hljs-comment">/*! 863MHz ETSI Frequency band operating mode #1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_STD_ETSI_863_PHY_3               3</span>
+<span class="hljs-comment">/*! 433MHz China Frequency band operating mode #1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_CHINA_433_PHY_128        128</span>
+<span class="hljs-comment">/*! PHY IDs - 915MHz LRM US Frequency band operating mode # 1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_US_LRM_915_PHY_129       129</span>
+<span class="hljs-comment">/*! 433MHz China LRM Frequency band operating mode #1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_CHINA_LRM_433_PHY_130    130</span>
+<span class="hljs-comment">/*! 863MHz ETSI LRM Frequency band operating mode #1 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_ETSI_LRM_863_PHY_131     131</span>
+<span class="hljs-comment">/*! PHY IDs - 915MHz US Frequency band operating mode # 3 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_US_915_PHY_132            132</span>
+<span class="hljs-comment">/*! 863MHz ETSI Frequency band operating mode #2 */</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> APIMAC_GENERIC_ETSI_863_PHY_133          133</span>
+</code></pre><span class="code-title"><p>The available PHY options are defined in api_mac.h. Note that the 868 MHz Band in the code is referred to as 863 MHz, named after the lowest supported frequency rather than the band's middle frequency.</p>
+</span></div></div>
+</li>
+</ul>
+</div>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Make sure you have the correct LaunchPad
+</span></h4>
+<ul>
+<li>CC1350 LaunchPad is available in 3 different flavours, the difference being the frequency band for which each LaunchPad is optimized:<ul>
+<li><strong>LAUNCHXL-CC13xxUS</strong> for the US market - optimized for the 915 MHz band</li>
+<li><strong>LAUNCHXL-CC13xxEU</strong> for the European market - optimized for the 868 MHz band</li>
+<li><strong>LAUNCHXL-CC13xxCN</strong> for the Chinese market - optimized for the 433 MHz band</li>
+</ul>
+</li>
+</ul>
+</div>
+</li>
+<li><p>In the same file (config.h), update the definition of CONFIG_CHANNEL_MASK as explained below:</p>
+<div class="bs-callout bs-callout-default "><h4><span class="glyphicon glyphicon-hand-right gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Updating the channel mask
+</span></h4>
+<ul>
+<li>The stack can be configured to enable any of the supported channels. If more than one channel is enabled, the best ("most quiet") channel is selected by the collector when starting the network. When the sensor looks for a network to join, it scans all the enabled channels until it finds the collector.
+<br><br></li>
+<li>To enabled the required channel and disable the other channels, you will need to edit the <strong>CONFIG_CHANNEL_MASK</strong> definition in config.h. This configuration item is a bitmask representing all the available channels. For example, in the 915 MHz band, there are 129 channels available. The first byte in CONFIG_CHANNEL_MASK represents channels 0 to 7, the second byte represents channels 8 to 15, and so on. The last byte corresponds to channels 128 to 135 - but in this case, only bit 0 represents an actual channel (128), while the upper 7 bits are ignored.
+<br><br></li>
+<li><p>Each student should update the definition of this configuration item such that only its designated channel is enabled, and all other channels are disabled. For example, student #10 should have it defined as follows:</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_3')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_3" class="lang-c hljs cpp"><span class="hljs-preprocessor">#<span class="hljs-keyword">define</span> CONFIG_CHANNEL_MASK { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, \
+                              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+                              0x00, 0x00, 0x00, 0x00, 0x00 }</span>
+</code></pre><span class="code-title"><p>Student #10 channel configuration (enable channel 10, disable all other channels)</p>
+</span></div></div>
+</li>
+<li><p>Note that the number of supported channels may be limited, depending on the frequency band being used. Please make sure to select a channel within the supported range - see the note box below.</p>
+</li>
+</ul>
+</div>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Available channels
+</span></h4>
+<ul>
+<li>The number of supported channels depend on the selected frequency band:<ul>
+<li>2.4 GHz band - channels 11 to 26 - total of  16 channels</li>
+<li>915 MHz band - channels 0 to 128 - total of 129 channels</li>
+<li>868 MHz band - channels 0 to  33 - total of  34 channels</li>
+<li>433 MHz band - channels 0 to   6 - total of   7 channels</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Multiple ways to prevent conflicts
+</span></h4>
+<p>  In this lab, each student uses a different channel, in order to avoid conflicts. Using TI 15.4-Stack, there is another way to avoid conflicts, which allows using the same channels by everybody. This method involves pre-assigning the same PAN-ID to every device in the intended network, and different PAN-IDs to different networks. The stack will automatically filter and accept only the packets targeted for its PAN. The downside of this would be that in a large classroom with many setups this could lead to channel congestion and a high rate of dropped packets.</p>
+</div>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">More info
+</span></h4>
+<p>  For more information regarding the available configuration settings, please see <strong>docs\ti154stack\ti154stack-software-developers-guide.html</strong>, under the SDK installation folder.</p>
+</div>
+</li>
+<li><p>By default, when the collector receives a reading from the sensor, it shows only the sensor ID, but not the reading value. To change it so that it shows the reading value instead of the sensor ID, open csf.c, and change the following line inside Csf_deviceSensorDataUpdate():</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_4')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_4" class="lang-c hljs cpp">LCD_WRITE_STRING_VALUE(<span class="hljs-string">"Sensor 0x"</span>, pSrcAddr-&gt;addr.shortAddr, <span class="hljs-number">16</span>, <span class="hljs-number">6</span>);
+</code></pre><span class="code-title"><p>Original printed data.</p>
+</span></div></div>
+<p>  to</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_5')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_5" class="lang-c hljs cpp">LCD_WRITE_STRING_VALUE(<span class="hljs-string">"Temperature="</span>, pMsg-&gt;tempSensor.objectTemp, <span class="hljs-number">10</span>, <span class="hljs-number">6</span>);
+</code></pre><span class="code-title"><p>Change to print a received sensor value.</p>
+</span></div></div>
+</li>
+<li><p>Connect the "Collector" LaunchPad to the PC</p>
+</li>
+<li><p>Build the project and download it to the LaunchPad by selecting the collector project in the project explorer and clicking the green bug (or hitting <kbd>F11</kbd>)</p>
+</li>
+<li><p>When programming is finished, terminate the debug session by clicking the red square (or, select <strong>Run</strong>→<strong>Terminate</strong>).</p>
+</li>
+</ol>
+<div class="bs-callout bs-callout-danger "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Troubleshooting: CCS says source file could not be found
+</span></h4>
+<p>Sometimes, after closing and then reopening CCS, it may display an error message saying a source file could not be found (e.g. config.h), and request you to hit F5 to refresh. Simply pressing F5 does not work. To clear this error message and solve the issue, you need to right click on the containing folder in the project explorer (e.g. the folder "Application"), and select Refresh.</p>
+</div>
+<h1 id="task-2-building-and-loading-the-sensor-example">Task 2: Building and loading the sensor example</h1>
+<ol>
+<li><p>Repeat Task 1, but this time select the <strong>sensor</strong> project when importing and building and use the "Sensor" LaunchPad. Skip the section that deals with changes to csf.c.</p>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Update the Channel Mask!
+</span></h4>
+<p> Make sure you did not forget to change the channel mask for the sensor project as well.</p>
+</div>
+</li>
+</ol>
+<h1 id="task-3-using-the-collector-and-sensor">Task 3: Using the Collector and Sensor</h1>
+<ol>
+<li><p>Close CCS</p>
+</li>
+<li><p>Make sure no terminal program is running.</p>
+</li>
+<li><p>Disconnect, then reconnect both CC13x0 LaunchPads to your PC. Otherwise, the LaunchPads' Application UART may not be available.</p>
+</li>
+<li><p>Open two instances of the terminal program,  connect each to a different LaunchPad's COM port - these ports should have the word 'UART' in their names. For example, in the following image, the you should select COM111 and COM114:
+</p><div class="modal-pop" style="cursor:zoom-in;"><img src="resources/Figure4.png" alt="Resource Explorer" class="img-responsive"></div><p></p>
+</li>
+<li><p>Configure the UARTs as follows:
+  • Baud rate: 115200
+  • Data: 8 bit
+  • Parity: none
+  • Stop: 1 bit
+  • Flow control: none.</p>
+</li>
+<li><p>Reset each of the LaunchPads to Factory New state by pressing and holding Button2, and then pressing the Reset button (while button 2 is held down).</p>
+<div class="bs-callout bs-callout-success "><h4><span class="glyphicon glyphicon-ok-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Observe and Understand
+</span></h4>
+<ul>
+<li>The collector terminal should look like this:
+<div class="modal-pop" style="cursor:zoom-in;"><img src="resources/Figure5.png" alt="Resource Explorer" class="img-responsive"></div></li>
+<li>The sensor terminal like this:
+<div class="modal-pop" style="cursor:zoom-in;"><img src="resources/Figure7.png" alt="Resource Explorer" class="img-responsive"></div></li>
+<li>The red LED on the collector should turn on after a short while, and the LEDs on the sensor should both remain off. The red LED on the collector means that it have successfully created a network. The collector terminal will now also say "Started" and "Channel: x", where x will be the number of the actual channel that was selected.</li>
+<li>At this point (after starting the network) the collector does not allow devices to join the network.</li>
+</ul>
+</div>
+</li>
+<li><p>Press Button2 on the collector to allow new devices to join the network . The red LED will start blinking, meaning that the network is now open for joining, and the collector's terminal will say "PermitJoin-ON".</p>
+<div class="bs-callout bs-callout-success "><h4><span class="glyphicon glyphicon-ok-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Observe and Understand
+</span></h4>
+<p>  The sensor will join the network after a short while, indicated by the red LED turning on on the sensor (otherwise, see Troubleshooting below). The collector's terminal will say "Joined: 0xX" where 0xX is the sensor ID, and the sensor's terminal will say "Started: 0xX" (0xX is the sensor ID), "Channel: x" and "State Changed 3" indicating successful network connection.</p>
+</div>
+<div class="bs-callout bs-callout-danger "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Troubleshooting
+</span></h4>
+<p>  If the sensor does not join after a short while, please reset it using the reset button.</p>
+</div>
+</li>
+<li><p>To close the network, press the collector's Button2 again, and its red LED will stop blinking and remain on.</p>
+<div class="bs-callout bs-callout-success "><h4><span class="glyphicon glyphicon-ok-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Observe and Understand
+</span></h4>
+<ul>
+<li>The Collector's terminal will say "ConfigRsp: 0xX" when a configure response command is received from sensor X, and "Temperature=XXX" when a reading is received from the sensor.</li>
+<li>Whenever a reading is sent from the sensor or received by the collector, the green LED will toggle on the sensor / collector respectively.</li>
+<li>Readings are sent from the sensor periodically. By default, the period configured by the collector is 90 seconds, but if the sensor fails to receive the configuration from the collector, it will send the readings every 3 minutes.</li>
+<li>Commands from the collector to the sensor can be sent only after the sensor is polling for data. These poll requests are sent by the sensor periodically, so it allows the sensor to sleep in the meantime. The default sensor poll rate is 6 seconds. This poll rate can be changed by the collector as part of the configuration message.</li>
+</ul>
+</div>
+</li>
+<li><p>Toggle command: By pressing Button1 on the collector, you can have the red LED of the sensor toggle. Try this a few times. Notice that the LED state may take up to 6 seconds to change, since the collector can only send the toggle command following a poll request from the sensor.</p>
+<div class="bs-callout bs-callout-warning "><h4><span class="glyphicon glyphicon-exclamation-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Using the toggle command when more than one sensor is connected
+</span></h4>
+<p>Note that if more than one sensor is connected to the same collector, the toggle command will only be sent to sensor #1 (the first to join the collector).</p>
+</div>
+</li>
+</ol>
+<h1 id="task-4-updating-the-sensor-s-reporting-rate">Task 4: Updating the sensor's reporting rate</h1>
+<p>Now let's make the reporting and the polling rate higher, to get a more responsive demo. All values below are in milliseconds.</p>
+<ol>
+<li><p>Open CCS, using the same workpace you used before.</p>
+</li>
+<li><p>Update the <em>default reporting interval</em> of the sensor: In the sensor project, in config.h, set <strong>CONFIG_REPORTING_INTERVAL</strong> to 500 (instead of 180000)</p>
+</li>
+<li><p>Update the <em>reporting interval</em> that the collector will request from the sensor: In the collector project, in config.h, set <strong>CONFIG_REPORTING_INTERVAL</strong> to 1000 (instead of 90000)</p>
+</li>
+<li><p>In the same file, Update the <em>polling interval</em> that the collector will request from the sensor - set <strong>CONFIG_POLLING_INTERVAL</strong> to 100 (instead of 6000)</p>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Sensor defualt polling interval
+</span></h4>
+<p>  The <em>default polling interval</em> (that is in effect in the sensor until configured otherwise by the collector) is defined by CONFIG_POLLING_INTERVAL in config.h (default is 6000). Don't change this value.</p>
+</div>
+</li>
+<li><p>When the sensor receives the poll interval configuration, it check whether the requested interval is within set limits. If it is outside the limits, the request will be ignored. The default lower limit is set to 1 second, so we will need to update it to support 100 ms interval. To do so, please set <strong>MIN_POLLING_INTERVAL</strong> in sensor.c to 100 (instead of 1000).</p>
+</li>
+<li><p>Rebuild the collector and sensor projects, and program the LaunchPads with the new builds, by following the next steps for each of the two projects:</p>
+<ul>
+<li>Select the project in Project Explorer</li>
+<li>Build and download to target by clicking the green bug icon</li>
+<li>Stop the debug session by clicking the red square icon once it becomes available</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>Reset both devices to Factory New (press the Reset button while holding Button2) and have the sensor connect to the collector as explained in the previous task.<div class="bs-callout bs-callout-success "><h4><span class="glyphicon glyphicon-ok-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Observe and Understand
+</span></h4>
+<p>See how the changes you made affect the sensor operation:</p>
+<ul>
+<li>As soon as the sensor connects to the network, the reporting rate is 500 ms.</li>
+<li>After about 6 seconds, the sensor polls for data and the configuration message is sent from the collector.</li>
+<li>Reporting rate is changed to 1 second.</li>
+<li>After a few more seconds, when the existing polling timer expires, the polling rate is increased to 100 ms - as evident by the high responsiveness of the sensor's red LED when pressing the collector's Button1 (i.e when sending the Toggle command).</li>
+</ul>
+</div>
+</li>
+</ul>
+<h1 id="references">References</h1>
+<p><strong>TI 15.4-Stack wiki pages</strong> are at <a href="http://www.ti.com/ti154stack-wiki">http://www.ti.com/ti154stack-wiki</a></p>
+<p><strong>CC13xx/CC26xx Software Overview</strong> – Available at <a href="http://www.ti.com/tool/cc13xx-sw">http://www.ti.com/tool/cc13xx-sw</a>.</p>
+<p><strong>CC13x0 Technical Reference Manual</strong> – Available <a href="http://www.ti.com/lit/swcu117">here</a></p>
+<p><strong>CC13x2/CC26x2 Technical Reference Manual</strong> – Available <a href="http://www.ti.com">here</a></p>
+<!-- Definition of inline references -->
+<div align="center" style="margin-top: 4em; font-size: smaller;">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="../../web_support/cc_license_icon.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</div>
+
+</div><div class="col-xs-4 col-sm-2 sidebar-offcanvas bs-docs-sidebar hidden-print" id="sidebar-overview"><ul class="nav nav-stacked fixed" id="sidebar"><li><a href="#introduction">Introduction</a></li><li><a href="#supported-devices-sdks">Supported Devices/SDKs</a></li><li><a href="#prerequisites">Prerequisites</a><ul class="nav nav-stacked"><li><a href="#background">Background</a></li><li><a href="#software">Software</a></li><li><a href="#hardware">Hardware</a></li><li><a href="#group-training-additional-requirements">Group training additional requirements</a></li></ul></li><li><a href="#task-0-label-your-launchpads">Task 0: Label your LaunchPads</a></li><li><a href="#task-1-building-and-loading-the-collector-example">Task 1: Building and loading the collector example</a></li><li><a href="#task-2-building-and-loading-the-sensor-example">Task 2: Building and loading the sensor example</a></li><li><a href="#task-3-using-the-collector-and-sensor">Task 3: Using the Collector and Sensor</a></li><li><a href="#task-4-updating-the-sensor-s-reporting-rate">Task 4: Updating the sensor's reporting rate</a></li><li><a href="#references">References</a></li></ul></div></div></div></div>
+
+<link rel="stylesheet" href="../../web_support/highlight/styles/zenburn.css">
+<script src="../../web_support/strapdown/vendor/jquery-1.11.2.min.js"></script>
+<script src="../../web_support/strapdown/vendor/bootstrap.min.js"></script>
+<script src="../../web_support/highlight/highlight.pack.js"></script>
+<script type="text/javascript">document.isPreRendered = true;</script><script src="../../web_support/strapdown/v/0.2/strapdown.js"></script>      <div class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">        <div class="vertical-alignment-helper">          <div class="modal-dialog vertical-align-center">             <div class="modal-dialog">               <div class="modal-content" style="margin-left: auto;margin-right: auto;">                 <div class="modal-body">                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>                   <img src="" class="imagepreview img-responsive">                 </div>              </div>            </div>          </div>        </div>      </div>
+
+
+</body></html>

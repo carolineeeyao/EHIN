@@ -43,6 +43,7 @@
 /* Drivers */
 #include <ti/drivers/rf/RF.h>
 #include <ti/drivers/PIN.h>
+#include <ti/drivers/UART.h>
 
 #include <ti/devices/DeviceFamily.h>
 #include DeviceFamily_constructPath(driverlib/rf_prop_mailbox.h)
@@ -114,6 +115,9 @@ static uint8_t* packetDataPointer;
 
 static PIN_Handle pinHandle;
 
+static UART_Handle      handle;
+static UART_Params      params;
+
 static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
 
 /*
@@ -171,92 +175,23 @@ static void rxTaskFunction(UArg arg0, UArg arg1)
     /* Set the frequency */
     RF_postCmd(rfHandle, (RF_Op*)&RF_cmdFs, RF_PriorityNormal, NULL, 0);
 
+    UART_Params_init(&params);
+    params.baudRate = 9600;
+    params.writeDataMode = UART_DATA_BINARY;
+    params.readDataMode = UART_DATA_BINARY;
+    params.readReturnMode = UART_RETURN_FULL;
+    params.readEcho = UART_ECHO_OFF;
+    handle = UART_open(Board_UART0, &params);
+    if (!handle) {
+        printf("UART did not open");
+    }
+
     /* Enter RX mode and stay forever in RX */
-    RF_EventMask terminationReason = RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropRx, 
+    while(1){
+        RF_EventMask terminationReason = RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropRx,
                                                RF_PriorityNormal, &callback, 
                                                RF_EventRxEntryDone);
-
-    switch(terminationReason)
-    {
-        case RF_EventCmdDone:
-            // A radio operation command in a chain finished
-            break;
-        case RF_EventLastCmdDone:            
-            // A stand-alone radio operation command or the last radio 
-            // operation command in a chain finished.
-            break;         
-        case RF_EventCmdCancelled:
-            // Command cancelled before it was started; it can be caused
-            // by RF_cancelCmd() or RF_flushCmd().
-            break;
-        case RF_EventCmdAborted:
-            // Abrupt command termination caused by RF_cancelCmd() or 
-            // RF_flushCmd().
-            break;  
-        case RF_EventCmdStopped:
-            // Graceful command termination caused by RF_cancelCmd() or 
-            // RF_flushCmd().
-            break;  
-        default:                
-            // Uncaught error event
-            Assert_isTrue(false, NULL);
     }
-    
-    uint32_t cmdStatus = ((volatile RF_Op*)&RF_cmdPropRx)->status;
-    switch(cmdStatus)
-    {
-        case PROP_DONE_OK:
-            // Packet received with CRC OK
-            break;
-        case PROP_DONE_RXERR:
-            // Packet received with CRC error
-            break;
-        case PROP_DONE_RXTIMEOUT:
-            // Observed end trigger while in sync search
-            break;
-        case PROP_DONE_BREAK:
-            // Observed end trigger while receiving packet when the command is
-            // configured with endType set to 1
-            break;
-        case PROP_DONE_ENDED:
-            // Received packet after having observed the end trigger; if the 
-            // command is configured with endType set to 0, the end trigger 
-            // will not terminate an ongoing reception
-            break;
-        case PROP_DONE_STOPPED:
-            // received CMD_STOP after command started and, if sync found, 
-            // packet is received
-            break;
-        case PROP_DONE_ABORT:
-            // Received CMD_ABORT after command started
-            break;
-        case PROP_ERROR_RXBUF:
-            // No RX buffer large enough for the received data available at 
-            // the start of a packet
-            break;
-        case PROP_ERROR_RXFULL:
-            // Out of RX buffer space during reception in a partial read
-            break;
-        case PROP_ERROR_PAR:
-            // Observed illegal parameter
-            break;
-        case PROP_ERROR_NO_SETUP:
-            // Command sent without setting up the radio in a supported
-            // mode using CMD_PROP_RADIO_SETUP or CMD_RADIO_SETUP
-            break;
-        case PROP_ERROR_NO_FS:
-            // Command sent without the synthesizer being programmed
-            break;
-        case PROP_ERROR_RXOVF:
-            // RX overflow observed during operation
-            break;
-        default:
-            // Uncaught error event - these could come from the
-            // pool of states defined in rf_mailbox.h
-            Assert_isTrue(false, NULL);
-    }
-    
-    while(1);
 }
 
 void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
@@ -276,7 +211,6 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         memcpy(packet, packetDataPointer, (packetLength + 1));
 
         int check = 0; //1 if unexpected packet
-        RFQueue_nextEntry();
         printf("Packet received!\n");
         int i = 0;
         if(packet[0]!=1 || packet[1]!=1){
@@ -292,6 +226,10 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
             /* Toggle pin to indicate RX */
             PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
         }
+//        const unsigned char hello[] = "Hello World\n";
+//        int ret = UART_write(handle, hello, sizeof(hello));
+//        printf("The UART wrote %d bytes\n", ret);
+        RFQueue_nextEntry();
     }
 }
 
@@ -302,6 +240,7 @@ int main(void)
 {
     /* Call driver init functions. */
     Board_initGeneral();
+    Board_initUART();
 
     /* Open LED pins */
     ledPinHandle = PIN_open(&ledPinState, pinTable);

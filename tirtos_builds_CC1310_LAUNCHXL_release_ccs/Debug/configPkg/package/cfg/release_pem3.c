@@ -2,7 +2,7 @@
  *  Do not modify this file; it is automatically 
  *  generated and any modifications will be overwritten.
  *
- * @(#) xdc-D20
+ * @(#) xdc-D21
  */
 
 #define __nested__
@@ -62,8 +62,8 @@
 #include <ti/sysbios/knl/Semaphore.h>
 #include <ti/sysbios/knl/Swi.h>
 #include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/posix/Settings.h>
 #include <ti/sysbios/rom/cortexm/cc13xx/CC13xx.h>
+#include <ti/sysbios/rts/ti/ReentSupport.h>
 #include <xdc/runtime/Assert.h>
 #include <xdc/runtime/Core.h>
 #include <xdc/runtime/Defaults.h>
@@ -645,12 +645,12 @@ typedef struct {
 
 
 /*
- * ======== ti.sysbios.posix.Settings INTERNALS ========
+ * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx INTERNALS ========
  */
 
 
 /*
- * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx INTERNALS ========
+ * ======== ti.sysbios.rts.ti.ReentSupport INTERNALS ========
  */
 
 
@@ -903,7 +903,7 @@ const ti_sysbios_gates_GateHwi_Fxns__ ti_sysbios_gates_GateHwi_Module__FXNS__C =
         ti_sysbios_gates_GateHwi_Object__create__S,
         ti_sysbios_gates_GateHwi_Object__delete__S,
         ti_sysbios_gates_GateHwi_Handle__label__S,
-        0x34, /* __mid */
+        0x33, /* __mid */
     } /* __sfxns */
 };
 
@@ -924,7 +924,7 @@ const ti_sysbios_gates_GateMutex_Fxns__ ti_sysbios_gates_GateMutex_Module__FXNS_
         ti_sysbios_gates_GateMutex_Object__create__S,
         ti_sysbios_gates_GateMutex_Object__delete__S,
         ti_sysbios_gates_GateMutex_Handle__label__S,
-        0x35, /* __mid */
+        0x34, /* __mid */
     } /* __sfxns */
 };
 
@@ -1394,13 +1394,21 @@ ti_sysbios_knl_Task_Module_State__ ti_sysbios_knl_Task_Module__state__V;
 
 
 /*
- * ======== ti.sysbios.posix.Settings DECLARATIONS ========
+ * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx DECLARATIONS ========
  */
 
 
 /*
- * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx DECLARATIONS ========
+ * ======== ti.sysbios.rts.ti.ReentSupport DECLARATIONS ========
  */
+
+/* Module_State__ */
+typedef struct ti_sysbios_rts_ti_ReentSupport_Module_State__ {
+    xdc_Int taskHId;
+} ti_sysbios_rts_ti_ReentSupport_Module_State__;
+
+/* Module__state__V */
+ti_sysbios_rts_ti_ReentSupport_Module_State__ ti_sysbios_rts_ti_ReentSupport_Module__state__V;
 
 
 /*
@@ -1716,7 +1724,7 @@ __FAR__ const xdc_SizeT ti_sysbios_knl_Task_Module_State_terminatedQ__O = offset
  *  Define absolute path prefix for this executable's
  *  configuration generated files.
  */
-xdc__META(__ASM__, "@(#)__ASM__ = C:/Users/carol/workspace_v7/tirtos_builds_CC1310_LAUNCHXL_release_ccs/Debug/configPkg/package/cfg/release_pem3");
+xdc__META(__ASM__, "@(#)__ASM__ = /Users/andrewphung/workspace_v7/tirtos_builds_CC1310_LAUNCHXL_release_ccs/Debug/configPkg/package/cfg/release_pem3");
 
 /*
  *  ======== __ISA__ ========
@@ -2468,6 +2476,7 @@ xdc_Void * const ti_sysbios_rom_ROM_xdc_runtime_System_SupportProxy_ready__E = (
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Seconds_Module__state__V, ".data:ti_sysbios_family_arm_cc26xx_Seconds_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Timer_Module__state__V, ".data:ti_sysbios_family_arm_cc26xx_Timer_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__state__V, ".data:ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__state__V");
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__state__V, ".data:ti_sysbios_rts_ti_ReentSupport_Module__state__V");
 
 #pragma DATA_SECTION(ti_sysbios_rom_ROM_AONRTCChannelEnable, ".const:ti_sysbios_rom_ROM_AONRTCChannelEnable");
 xdc_Void * const ti_sysbios_rom_ROM_AONRTCChannelEnable = (xdc_Void *)NULL;
@@ -2501,10 +2510,8 @@ Void ti_sysbios_rom_cortexm_cc13xx_CC13xx_checkRevision__E()
 
 
 /*
- * ======== ti.sysbios.posix.Settings TEMPLATE ========
+ * ======== ti.posix.tirtos.Settings TEMPLATE ========
  */
-
-
 
 
 /*
@@ -2741,6 +2748,32 @@ Void ATTRIBUTE *_realloc_r(struct _reent *rptr, Void *ptr, SizeT size)
 
 #endif
 
+
+/*
+ * ======== ti.sysbios.rts.ti.ReentSupport TEMPLATE ========
+ */
+
+#include <ti/sysbios/rts/ti/package/internal/ReentSupport.xdc.h>
+
+/*
+ *  ======== ReentSupport_getTlsAddr ========
+ */
+Int *ti_sysbios_rts_ti_ReentSupport_getTlsAddr__I()
+{
+    ti_sysbios_knl_Task_Handle task;
+    Int *buf;
+
+    task = ti_sysbios_knl_Task_self();
+    /*  All ROM builds of SYS/BIOS have SMP mode disabled. This leaves
+     *  two unused words in the task object: curCoreId and affinity.
+     *  Use one of these (curCoreId) as the memory storage for the TLS
+     *  errno symbol. NB: Internal access to the task object is enabled
+     *  in template code.
+     */
+    buf = (Int *)(&(task->curCoreId));
+
+    return (buf);
+}
 
 /*
  * ======== ti.sysbios.BIOS INITIALIZERS ========
@@ -3817,7 +3850,7 @@ __FAR__ const CT__ti_sysbios_gates_GateHwi_Module__gatePrms ti_sysbios_gates_Gat
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateHwi_Module__id__C, ".const:ti_sysbios_gates_GateHwi_Module__id__C");
-__FAR__ const CT__ti_sysbios_gates_GateHwi_Module__id ti_sysbios_gates_GateHwi_Module__id__C = (xdc_Bits16)0x34;
+__FAR__ const CT__ti_sysbios_gates_GateHwi_Module__id ti_sysbios_gates_GateHwi_Module__id__C = (xdc_Bits16)0x33;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateHwi_Module__loggerDefined__C, ".const:ti_sysbios_gates_GateHwi_Module__loggerDefined__C");
@@ -3946,7 +3979,7 @@ __FAR__ const CT__ti_sysbios_gates_GateMutex_Module__gatePrms ti_sysbios_gates_G
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateMutex_Module__id__C, ".const:ti_sysbios_gates_GateMutex_Module__id__C");
-__FAR__ const CT__ti_sysbios_gates_GateMutex_Module__id ti_sysbios_gates_GateMutex_Module__id__C = (xdc_Bits16)0x35;
+__FAR__ const CT__ti_sysbios_gates_GateMutex_Module__id ti_sysbios_gates_GateMutex_Module__id__C = (xdc_Bits16)0x34;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateMutex_Module__loggerDefined__C, ".const:ti_sysbios_gates_GateMutex_Module__loggerDefined__C");
@@ -5769,87 +5802,6 @@ __FAR__ const CT__ti_sysbios_knl_Task_startupHookFunc ti_sysbios_knl_Task_startu
 
 
 /*
- * ======== ti.sysbios.posix.Settings INITIALIZERS ========
- */
-
-/* Module__diagsEnabled__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__diagsEnabled__C, ".const:ti_sysbios_posix_Settings_Module__diagsEnabled__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__diagsEnabled ti_sysbios_posix_Settings_Module__diagsEnabled__C = (xdc_Bits32)0x90;
-
-/* Module__diagsIncluded__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__diagsIncluded__C, ".const:ti_sysbios_posix_Settings_Module__diagsIncluded__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__diagsIncluded ti_sysbios_posix_Settings_Module__diagsIncluded__C = (xdc_Bits32)0x90;
-
-/* Module__diagsMask__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__diagsMask__C, ".const:ti_sysbios_posix_Settings_Module__diagsMask__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__diagsMask ti_sysbios_posix_Settings_Module__diagsMask__C = ((CT__ti_sysbios_posix_Settings_Module__diagsMask)0);
-
-/* Module__gateObj__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__gateObj__C, ".const:ti_sysbios_posix_Settings_Module__gateObj__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__gateObj ti_sysbios_posix_Settings_Module__gateObj__C = ((CT__ti_sysbios_posix_Settings_Module__gateObj)0);
-
-/* Module__gatePrms__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__gatePrms__C, ".const:ti_sysbios_posix_Settings_Module__gatePrms__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__gatePrms ti_sysbios_posix_Settings_Module__gatePrms__C = ((CT__ti_sysbios_posix_Settings_Module__gatePrms)0);
-
-/* Module__id__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__id__C, ".const:ti_sysbios_posix_Settings_Module__id__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__id ti_sysbios_posix_Settings_Module__id__C = (xdc_Bits16)0x33;
-
-/* Module__loggerDefined__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerDefined__C, ".const:ti_sysbios_posix_Settings_Module__loggerDefined__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerDefined ti_sysbios_posix_Settings_Module__loggerDefined__C = 0;
-
-/* Module__loggerObj__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerObj__C, ".const:ti_sysbios_posix_Settings_Module__loggerObj__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerObj ti_sysbios_posix_Settings_Module__loggerObj__C = ((CT__ti_sysbios_posix_Settings_Module__loggerObj)0);
-
-/* Module__loggerFxn0__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerFxn0__C, ".const:ti_sysbios_posix_Settings_Module__loggerFxn0__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerFxn0 ti_sysbios_posix_Settings_Module__loggerFxn0__C = ((CT__ti_sysbios_posix_Settings_Module__loggerFxn0)0);
-
-/* Module__loggerFxn1__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerFxn1__C, ".const:ti_sysbios_posix_Settings_Module__loggerFxn1__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerFxn1 ti_sysbios_posix_Settings_Module__loggerFxn1__C = ((CT__ti_sysbios_posix_Settings_Module__loggerFxn1)0);
-
-/* Module__loggerFxn2__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerFxn2__C, ".const:ti_sysbios_posix_Settings_Module__loggerFxn2__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerFxn2 ti_sysbios_posix_Settings_Module__loggerFxn2__C = ((CT__ti_sysbios_posix_Settings_Module__loggerFxn2)0);
-
-/* Module__loggerFxn4__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerFxn4__C, ".const:ti_sysbios_posix_Settings_Module__loggerFxn4__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerFxn4 ti_sysbios_posix_Settings_Module__loggerFxn4__C = ((CT__ti_sysbios_posix_Settings_Module__loggerFxn4)0);
-
-/* Module__loggerFxn8__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Module__loggerFxn8__C, ".const:ti_sysbios_posix_Settings_Module__loggerFxn8__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Module__loggerFxn8 ti_sysbios_posix_Settings_Module__loggerFxn8__C = ((CT__ti_sysbios_posix_Settings_Module__loggerFxn8)0);
-
-/* Object__count__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Object__count__C, ".const:ti_sysbios_posix_Settings_Object__count__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Object__count ti_sysbios_posix_Settings_Object__count__C = 0;
-
-/* Object__heap__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Object__heap__C, ".const:ti_sysbios_posix_Settings_Object__heap__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Object__heap ti_sysbios_posix_Settings_Object__heap__C = 0;
-
-/* Object__sizeof__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Object__sizeof__C, ".const:ti_sysbios_posix_Settings_Object__sizeof__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Object__sizeof ti_sysbios_posix_Settings_Object__sizeof__C = 0;
-
-/* Object__table__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_Object__table__C, ".const:ti_sysbios_posix_Settings_Object__table__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_Object__table ti_sysbios_posix_Settings_Object__table__C = 0;
-
-/* supportsMutexPriority__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_supportsMutexPriority__C, ".const:ti_sysbios_posix_Settings_supportsMutexPriority__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_supportsMutexPriority ti_sysbios_posix_Settings_supportsMutexPriority__C = 0;
-
-/* debug__C */
-#pragma DATA_SECTION(ti_sysbios_posix_Settings_debug__C, ".const:ti_sysbios_posix_Settings_debug__C");
-__FAR__ const CT__ti_sysbios_posix_Settings_debug ti_sysbios_posix_Settings_debug__C = 0;
-
-
-/*
  * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx INITIALIZERS ========
  */
 
@@ -5920,6 +5872,96 @@ __FAR__ const CT__ti_sysbios_rom_cortexm_cc13xx_CC13xx_Object__sizeof ti_sysbios
 /* Object__table__C */
 #pragma DATA_SECTION(ti_sysbios_rom_cortexm_cc13xx_CC13xx_Object__table__C, ".const:ti_sysbios_rom_cortexm_cc13xx_CC13xx_Object__table__C");
 __FAR__ const CT__ti_sysbios_rom_cortexm_cc13xx_CC13xx_Object__table ti_sysbios_rom_cortexm_cc13xx_CC13xx_Object__table__C = 0;
+
+
+/*
+ * ======== ti.sysbios.rts.ti.ReentSupport INITIALIZERS ========
+ */
+
+/* Module__state__V */
+#if defined (__ICCARM__)
+#pragma location = ".data_ti_sysbios_rts_ti_ReentSupport_Module__state__V"
+#endif
+#if defined(__GNUC__) && !(defined(__MACH__) && defined(__APPLE__))
+#ifndef __TI_COMPILER_VERSION__
+ti_sysbios_rts_ti_ReentSupport_Module_State__ ti_sysbios_rts_ti_ReentSupport_Module__state__V __attribute__ ((section(".data_ti_sysbios_rts_ti_ReentSupport_Module__state__V")));
+#endif
+#endif
+ti_sysbios_rts_ti_ReentSupport_Module_State__ ti_sysbios_rts_ti_ReentSupport_Module__state__V = {
+    (xdc_Int)(-0x0 - 1),  /* taskHId */
+};
+
+/* Module__diagsEnabled__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__diagsEnabled__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__diagsEnabled__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__diagsEnabled ti_sysbios_rts_ti_ReentSupport_Module__diagsEnabled__C = (xdc_Bits32)0x90;
+
+/* Module__diagsIncluded__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__diagsIncluded__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__diagsIncluded__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__diagsIncluded ti_sysbios_rts_ti_ReentSupport_Module__diagsIncluded__C = (xdc_Bits32)0x90;
+
+/* Module__diagsMask__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__diagsMask__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__diagsMask__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__diagsMask ti_sysbios_rts_ti_ReentSupport_Module__diagsMask__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__diagsMask)0);
+
+/* Module__gateObj__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__gateObj__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__gateObj__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__gateObj ti_sysbios_rts_ti_ReentSupport_Module__gateObj__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__gateObj)0);
+
+/* Module__gatePrms__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__gatePrms__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__gatePrms__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__gatePrms ti_sysbios_rts_ti_ReentSupport_Module__gatePrms__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__gatePrms)0);
+
+/* Module__id__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__id__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__id__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__id ti_sysbios_rts_ti_ReentSupport_Module__id__C = (xdc_Bits16)0x35;
+
+/* Module__loggerDefined__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerDefined__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerDefined__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerDefined ti_sysbios_rts_ti_ReentSupport_Module__loggerDefined__C = 0;
+
+/* Module__loggerObj__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerObj__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerObj__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerObj ti_sysbios_rts_ti_ReentSupport_Module__loggerObj__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerObj)0);
+
+/* Module__loggerFxn0__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn0__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn0__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn0 ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn0__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn0)0);
+
+/* Module__loggerFxn1__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn1__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn1__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn1 ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn1__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn1)0);
+
+/* Module__loggerFxn2__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn2__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn2__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn2 ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn2__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn2)0);
+
+/* Module__loggerFxn4__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn4__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn4__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn4 ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn4__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn4)0);
+
+/* Module__loggerFxn8__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn8__C, ".const:ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn8__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn8 ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn8__C = ((CT__ti_sysbios_rts_ti_ReentSupport_Module__loggerFxn8)0);
+
+/* Object__count__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Object__count__C, ".const:ti_sysbios_rts_ti_ReentSupport_Object__count__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Object__count ti_sysbios_rts_ti_ReentSupport_Object__count__C = 0;
+
+/* Object__heap__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Object__heap__C, ".const:ti_sysbios_rts_ti_ReentSupport_Object__heap__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Object__heap ti_sysbios_rts_ti_ReentSupport_Object__heap__C = 0;
+
+/* Object__sizeof__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Object__sizeof__C, ".const:ti_sysbios_rts_ti_ReentSupport_Object__sizeof__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Object__sizeof ti_sysbios_rts_ti_ReentSupport_Object__sizeof__C = 0;
+
+/* Object__table__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_Object__table__C, ".const:ti_sysbios_rts_ti_ReentSupport_Object__table__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_Object__table ti_sysbios_rts_ti_ReentSupport_Object__table__C = 0;
+
+/* A_badThreadType__C */
+#pragma DATA_SECTION(ti_sysbios_rts_ti_ReentSupport_A_badThreadType__C, ".const:ti_sysbios_rts_ti_ReentSupport_A_badThreadType__C");
+__FAR__ const CT__ti_sysbios_rts_ti_ReentSupport_A_badThreadType ti_sysbios_rts_ti_ReentSupport_A_badThreadType__C = (((xdc_runtime_Assert_Id)0) << 16 | 16);
 
 
 /*
@@ -7573,6 +7615,17 @@ __FAR__ const CT__xdc_runtime_Types_Object__table xdc_runtime_Types_Object__tabl
 
 
 /*
+ * ======== ti.sysbios.rts.ti.ReentSupport FUNCTION STUBS ========
+ */
+
+/* getReent__E */
+xdc_Int *ti_sysbios_rts_ti_ReentSupport_getReent__E( void ) 
+{
+    return ti_sysbios_rts_ti_ReentSupport_getReent__F();
+}
+
+
+/*
  * ======== ti.sysbios.hal.Seconds_SecondsProxy PROXY BODY ========
  */
 
@@ -8348,11 +8401,11 @@ xdc_CPtr ti_sysbios_knl_Intrinsics_SupportProxy_Proxy__delegate__S( void )
 
 
 /*
- * ======== ti.sysbios.posix.Settings SYSTEM FUNCTIONS ========
+ * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx SYSTEM FUNCTIONS ========
  */
 
 /* Module__startupDone__S */
-xdc_Bool ti_sysbios_posix_Settings_Module__startupDone__S( void )
+xdc_Bool ti_sysbios_rom_cortexm_cc13xx_CC13xx_Module__startupDone__S( void )
 {
     return 1;
 }
@@ -8360,11 +8413,11 @@ xdc_Bool ti_sysbios_posix_Settings_Module__startupDone__S( void )
 
 
 /*
- * ======== ti.sysbios.rom.cortexm.cc13xx.CC13xx SYSTEM FUNCTIONS ========
+ * ======== ti.sysbios.rts.ti.ReentSupport SYSTEM FUNCTIONS ========
  */
 
 /* Module__startupDone__S */
-xdc_Bool ti_sysbios_rom_cortexm_cc13xx_CC13xx_Module__startupDone__S( void )
+xdc_Bool ti_sysbios_rts_ti_ReentSupport_Module__startupDone__S( void )
 {
     return 1;
 }

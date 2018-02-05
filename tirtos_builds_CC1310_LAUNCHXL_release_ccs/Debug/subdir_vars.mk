@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
-
 # Add inputs and outputs from these tool invocations to the build variables 
 CFG_SRCS += \
 ../release.cfg 
@@ -22,10 +20,10 @@ GEN_OPTS += \
 ./configPkg/compiler.opt 
 
 GEN_MISC_DIRS__QUOTED += \
-"configPkg\" 
+"configPkg/" 
 
 GEN_FILES__QUOTED += \
-"configPkg\linker.cmd" \
-"configPkg\compiler.opt" 
+"configPkg/linker.cmd" \
+"configPkg/compiler.opt" 
 
 

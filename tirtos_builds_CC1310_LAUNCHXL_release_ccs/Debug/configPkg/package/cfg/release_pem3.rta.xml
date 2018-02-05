@@ -199,17 +199,17 @@
     <logger>null</logger>
     <diagsMask>0000110000000000</diagsMask>
   </modMap>
-  <modMap key="ti.sysbios.posix.Settings">
+  <modMap key="ti.sysbios.gates.GateHwi">
     <id>51</id>
     <logger>null</logger>
     <diagsMask>0000110000000000</diagsMask>
   </modMap>
-  <modMap key="ti.sysbios.gates.GateHwi">
+  <modMap key="ti.sysbios.gates.GateMutex">
     <id>52</id>
     <logger>null</logger>
     <diagsMask>0000110000000000</diagsMask>
   </modMap>
-  <modMap key="ti.sysbios.gates.GateMutex">
+  <modMap key="ti.sysbios.rts.ti.ReentSupport">
     <id>53</id>
     <logger>null</logger>
     <diagsMask>0000110000000000</diagsMask>

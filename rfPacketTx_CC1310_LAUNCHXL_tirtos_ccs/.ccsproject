@@ -12,6 +12,6 @@
 	<createSlaveProjects value=""/>
 	<ignoreDefaultDeviceSettings value="true"/>
 	<templateProperties value="id=rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs.projectspec.rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs,buildProfile=release,isHybrid=true,"/>
-	<origin value="C:\ti\simplelink_cc13x0_sdk_1_50_00_08\examples\rtos\CC1310_LAUNCHXL\drivers\rfPacketTx\tirtos\ccs\rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs.projectspec"/>
+	<origin value="/Users/andrewphung/Library/Mobile Documents/com~apple~CloudDocs/Projects/EHIN/rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs"/>
 	<filesToOpen value=""/>
 </projectOptions>

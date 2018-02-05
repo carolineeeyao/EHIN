@@ -1,0 +1,390 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>TI Drivers Project Zero</title>
+<link rel="stylesheet" href="../../web_support/strapdown/v/0.2/fonts/ubuntu-regular-woff.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/fonts/glyphicons-halflings-regular.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/themes/united2.min.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/themes/bootstrap-responsive.min.css"><link rel="stylesheet" href="../../web_support/strapdown/v/0.2/strapdown.css"><link rel="shortcut icon" type="image/x-icon" href="../../.metadata/favicon.ico"></head>
+
+<!-- START PRE -->
+
+
+
+
+
+
+<!-- END PRE -->
+
+<body style=""><div class="container"><nav class="navbar navbar-default navbar-static-top"><div class="container-fluid"> <div class="navbar-header">  <div id="headline" class="navbar-brand">TI Drivers Project Zero</div> </div> </div></nav><div class="container"><div class="row row-offcanvas row-offcanvas-left"><div class="col-xs-12 col-sm-9" id="content"><h1 id="-introduction">  Introduction</h1>
+<p>  This workshop is a simple introduction for using TI Drivers within the Simplelink™ SDK. The goal for this project is to get you familiarized with your TI LaunchPad™ development kit, introduce you to TI Resource Explorer and the content delivered within, as well as create &amp; compile a simple code example using CCS Cloud.</p>
+<p>  To get our feet wet, we are going to start basic &amp; will learn how to blink an LED on our LaunchPad using the SimpleLink SDK. Specifically, we are going to be using "TI Drivers", a collection of easy-to-use APIs that provide abstracted, functional access to various peripherals. Note that TI Drivers are compatible across the entire portfolio SimpleLink MCU devices. To do so, we'll start with a code example...</p>
+<p>  <strong>Here's what we'll learn:</strong></p>
+<ul>
+<li>Navigating TI Resource Explorer</li>
+<li>Getting familiar with the SimpleLink SDK &amp; TI Drivers</li>
+<li>Importing projects into CCS Cloud</li>
+<li><p>Editing, building &amp; flashing a TI LaunchPad using the browser-based IDE</p>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/cloud_get_started.png" alt="" class="img-responsive"></div><p></p>
+</li>
+</ul>
+<h1 id="-prerequisites">  Prerequisites</h1>
+<h3 id="software-for-desktop-development">Software for desktop development</h3>
+<p>  This tutorial can be done 100% with a web browser in the cloud. However, the exercises can also be completed using desktop/offline tools as well. If you want to run the exercises offline, you will need to download &amp; install the following:</p>
+<ul>
+<li>CCS 7.1+</li>
+<li>SimpleLink SDK for your given LaunchPad</li>
+</ul>
+<h3 id="hardware-requirements">Hardware requirements</h3>
+<ul>
+<li>A SimpleLink LaunchPad Development Kit</li>
+</ul>
+<h3 id="recommended-reading">Recommended Reading</h3>
+<ul>
+<li>SimpleLink SDK Quick Start Guide</li>
+<li>SimpleLink SDK User Guide</li>
+</ul>
+<h1 id="-task-1-finding-the-blink-led-code-example">  Task 1 - Finding the Blink LED code example</h1>
+<h2 id="-1-finding-code-examples-using-ti-resource-explorer">  1. Finding code examples using TI Resource Explorer</h2>
+<p>  <a href="http://dev.ti.com/tirex">TI Resource Explorer</a> has the ability to filter all of the development resources for a given context. In this case, we can filter &amp; expose all content that is related to this specific LaunchPad. To do so, we can search for the LaunchPad using the search bar on the top-left corner. Clicking on a device or development kit will filter the content presented in TI Resource Explorer.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/ti_rex_filter.png" alt="" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  Once filtered, developers can browse the available resources provided in TI Resource Explorer, which is broken up into 3 categories: Software, Device Documentation &amp; Development Tools. Also, while TI Resource Explorer is cloud-enabled, any of the delivered content can be downloaded locally onto your machine (i.e. to import code examples into a traditional IDE like Code Composer Studio). Alternatively, we can stay in the cloud &amp; import code examples into TI's cloud-connected CCS Cloud IDE, which is what we'll be using for this example.</p>
+<h2 id="-2-look-inside-the-software-category-in-ti-resource-explorer-">  2. Look inside the "Software" category in TI Resource Explorer.</h2>
+<p>  Here, you will see all of the SDKs that are available for your device/LaunchPad. In this case, we will be using the SimpleLink™ MSP432™ MCU SDK, so expand that folder to find documentation &amp; code examples that are available within the SDK. You can learn more about the SimpleLink MSP432 SDK here, but for now, we will use one of the TI Drivers code examples.</p>
+<p>  You can find the code examples that showcase how to use the "TI Drivers" at
+  <code>Software &gt; [SimpleLink SDK] &gt; Examples &gt; Development Tools &gt; [LaunchPad] &gt; TI Drivers &gt; [Examples]</code></p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/software.png" alt="" class="img-responsive"></div><p></p>
+</blockquote>
+<h2 id="-3-expand-the-ti-drivers-folder-to-find-many-examples-on-how-to-exercise-various-ti-drivers-">  3. Expand the "TI Drivers" folder to find many examples on how to exercise various TI Drivers.</h2>
+<p>  TI Drivers is a set of common, consistent functional APIs that are supported across the TI SimpleLink portfolio, enabling maximum code portability.</p>
+<p>  Few things of note. TI Drivers today require an RTOS. All devices in the SimpleLink platform have support for TI-RTOS. Most SimpleLink devices also support FreeRTOS. However, rather than make direct calls to kernel-specific API calls, the TI Driver code examples leverage POSIX &amp; a Driver Porting Layer (DPL) to provide a consistent API layer on top of a desired kernel. The SimpleLink SDK is compliant with POSIX, an industry standard abstraction layer, which exposes common kernel-related functions through a common set of APIs.</p>
+<h2 id="-4-let-s-look-at-the-empty-example-">  4. Let's look at the "empty" example.</h2>
+<p>  The "empty" project is a template file that builds a framework for a new SimpleLink SDK-based project. In short, it creates a single-threaded application using POSIX APIs that toggles an LED pin high &amp; low using TI Driver APIs. Note that there are several versions of each TI Driver example. An example is available based on TI-RTOS (and FreeRTOS for most SimpleLink devices). Additionally, there are variants that use either the CCS or GCC compiler. Select any version you like. In the screenshot below, we are going to use the TI-RTOS variant that uses the CCS compiler.</p>
+<p>  <code>Software &gt; [SimpleLink SDK] &gt; Examples &gt; Development Tools &gt; [LaunchPad] &gt; TI Drivers &gt; Examples &gt; empty</code></p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/empty_project.png" alt="Empty Project" class="img-responsive"></div><p></p>
+</blockquote>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Our TI Driver examples use POSIX
+</span></h4>
+<p>  POSIX is an abstraction layer that offers source code compatibility between different RTOS Kernels, so regardless of which RTOS variant you select for this example, the application source code is identical &amp; fully portable between TI-RTOS or FreeRTOS.</p>
+</div>
+<p>  Additionally, note that each code example is packaged with a readme.html page, which includes helpful documentation offering an overview of each example. A Board.html page is also provided to show how some hardware resources can be accessed in your software (i.e. on-board LEDs, pushbuttons, etc.).</p>
+<p>  Lastly, without having to download or unzip anything, developers can easily explore the contents of the project. To see the code example source, click on the file within the project &amp; the source will be presented within TI Resource Explorer. The main application for this project is "empty.c"</p>
+<h1 id="-task-2-importing-code-example-into-ide">  Task 2 - Importing code example into IDE</h1>
+<h2 id="-1-import-into-ccs-cloud-ide">  1. Import into CCS Cloud IDE</h2>
+<p>  Now that we've identified our code example, we will go ahead and import it into CCS Cloud. We can do so by clicking on the cloud icon when the project folder is highlighted (shown in screenshot below). Clicking this will import the entire project into CCS Cloud, our cloud-based IDE. From there, we will have the ability to edit, compile, flash &amp; even debug our code.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/cloud_icon.png" alt="Import into CCS Cloud IDE" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  Note that developers also have the option to download this code example &amp; its dependencies locally, which allows you to import these examples into a traditional offline IDE like CCS &amp; IAR. However, for this quick tutorial, we'll stick with the cloud.</p>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">If using CCS Cloud, you may be asked to download &amp; install browser extensions.
+</span></h4>
+<p>  Chrome is the recommended browser for developing with CCS Cloud.</p>
+</div>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">TI Resource Explorer is also packaged within the traditional desktop version of Code Composer Studio v7
+</span></h4>
+<p>  Within the IDE, users will be able to navigate TI Resource Explorer &amp; make the content available for offline consumption by downloading relevant content locally. Once downloaded locally, users can import projects into the IDE with a single click to start development.</p>
+</div>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Note that the RTOS library project is also imported.
+</span></h4>
+</div>
+<h2 id="-2-getting-familiarized-with-ccs-cloud">  2. Getting familiarized with CCS Cloud</h2>
+<p>  If you haven't already, click the cloud icon to import the "empty" example into CCS Cloud. The example we found has now been imported into CCS Cloud. At this point, we have the ability to edit the code, compile/debug &amp; more. This particular code example shows us how to use the GPIO TI Driver APIs to toggle an I/O pin high &amp; low to blink an LED. You can learn more about this particular code example by again clicking on the Readme.html page that is provided with each example.</p>
+<p>  The CCS Cloud IDE offers a powerful development environment capable of running in a web browser (Chrome recommended). Within this tool, users can modify their code example, build their project &amp; even debug.</p>
+<p>  <strong>CCS Cloud code editor offers lots of nifty features, including:</strong></p>
+<ul>
+<li>Code folding</li>
+<li>F3 to jump to definition</li>
+<li>Code auto-completion</li>
+<li>Integrated serial monitor/terminal</li>
+<li>More!</li>
+</ul>
+<p>  <strong>CCS Cloud also offers debug capabilities</strong></p>
+<ul>
+<li>Watch variables (and graph them too!)</li>
+<li>Set breakpoints</li>
+<li>Step through code line-by-line</li>
+<li><p>More!</p>
+<p><a href="https://dev.ti.com/about" target="_blank">Learn more about CCS Cloud here.</a></p>
+</li>
+</ul>
+<h2 id="-3-familiarizing-ourselves-with-ti-drivers-resources-documentation">  3. Familiarizing ourselves with TI Drivers resources &amp; documentation</h2>
+<p>  Explore these files to get a quick introduction to this code example. Each example is packaged with one.</p>
+<h4 id="board-html">Board.html</h4>
+<p>  This file provides a high-level visual aid for your board file &amp; shows how you may address different resources available on your LaunchPad kit (LEDs, switches, I/O pins, etc.).</p>
+<h4 id="readme-html">README.html</h4>
+<p>  This file provides an overview for each example.</p>
+<h2 id="-4-taking-a-closer-look-at-the-source-files">  4. Taking a closer look at the source files</h2>
+<p>  Let's take a look at the empty.c source file - simply double-click the file to open it up in CCS Cloud. In general, this "empty" project provides you with a framework that you can use as a starting point for your own project. It shows you where to include the header files for the TI Drivers you want to use (only the GPIO driver is used in this example). It also provides a framework for your main loop, which is running inside of a single thread called "mainThread."</p>
+<p>  Inside of mainThread, we see that we have to initialize the GPIO driver before we can use it by calling the <code>GPIO_init()</code> function. Once the driver has been initialized, we can use the driver to set the GPIO high using the <code>GPIO_write()</code> API. We also notice that we are using the <code>Board_PIN_LED0</code> designator, which was declared in our Board.h file (and is documented in the Board.html file).</p>
+<p>  Further down mainThead, we see our <code>while(1)</code> loop, which is our main loop for this simple example. Within this loop, we use another GPIO Driver API to toggle the pin. We do this once every second, which is determined by the <code>sleep()</code> function, which takes a parameter for number of seconds. The <code>sleep()</code> function is provided by the unistd.h header that is included in the "empty" project by default.</p>
+<p>  Another file to take  a look at is "main_tirtos.c" or "main_freertos.c" - each example includes one of these files depending on the underlying kernel being used. However, since we are using POSIX in our TI Driver examples, these files are largely identical. Within this file, we configure the kernel, create &amp; configure our thread(s) and set their priorities. For instance, we see that we use the POSIX API <code>pthread_create()</code> to create our mainThread, which is what we saw in our main empty.c source file.</p>
+<div class="bs-callout bs-callout-default "><h4><span class="glyphicon glyphicon-question-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Quick Quiz:
+</span></h4>
+<p>  Which API did we use to toggle the LED?</p>
+<div class="quiz-toolbar"><div>
+<input type="radio" id="q1.0" class="answer-wrong" name="quiz-1"><label for="q1.0" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; This is an available API, but not the one used to toggle the LED on &amp; off.&lt;/p&gt;
+">GPIO_write() </label>
+<input type="radio" id="q1.1" class="answer-right" name="quiz-1"><label for="q1.1" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; Correct!&lt;/p&gt;
+">GPIO_toggle() </label>
+<input type="radio" id="q1.2" class="answer-wrong" name="quiz-1"><label for="q1.2" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; Nope!&lt;/p&gt;
+">GPIO_setHigh() </label>
+</div></div>
+<p>  Which file gives you an overview of the code example you're using?</p>
+<div class="quiz-toolbar"><div>
+<input type="radio" id="q2.3" class="answer-wrong" name="quiz-2"><label for="q2.3" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; Nope! But this is a helpful resource for deciphering resources available on your LaunchPad kit.&lt;/p&gt;
+">Board.html </label>
+<input type="radio" id="q2.4" class="answer-right" name="quiz-2"><label for="q2.4" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; Correct! Each TI Driver example is paired with a README.html that provides an overview of each example.&lt;/p&gt;
+">README.html </label>
+<input type="radio" id="q2.5" class="answer-wrong" name="quiz-2"><label for="q2.5" class="quiz-label " data-toggle="tooltip" data-html="true" data-container="body" data-placement="auto top" data-trigger="click" title="" data-original-title="&lt;p&gt; Nope!&lt;/p&gt;
+">main_tirtos.c </label>
+</div></div>
+</div>
+<h1 id="-task-3-build-your-project">  Task 3 - Build your project</h1>
+<h2 id="-1-build-compile-your-source-code">  1. Build/compile your source code</h2>
+<p>  To build your project, simply click the hammer icon. This will compile your code in the cloud &amp; provide a .out file, which you can flash into your device. Alternatively, you can click on the Debug icon, which will compile your code &amp; flash your hardware. It will also jump you into a debug session, where you can step through your code, set breakpoints &amp; watch variables.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/build.png" alt="Build your project." class="img-responsive"></div><p></p>
+</blockquote>
+<h2 id="-2-let-s-load-our-launchpad-">  2. Let's load our LaunchPad!</h2>
+<p>  To program our LaunchPad, we can click on the "Run" button in CCS Cloud. This will build our project &amp; flash our hardware with the newly compiled image. This will take a minute or so. Once programmed, your LaunchPad will automatically start to execute the code &amp; the LaunchPad's LED should start blinking!</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/run.png" alt="Run button builds your project &amp; flashes your LaunchPad" class="img-responsive"></div><p></p>
+</blockquote>
+<div class="bs-callout bs-callout-warning "><h4><span style="vertical-align: middle;">CHALLENGE: Try to toggle the I/O pin tied to a different LED (if available on your LaunchPad)
+</span></h4>
+<p>  Now that we have our LED blinking, use the Board.html file as a resource to modify the project to blink a different LED. Also, be sure to check out the Board.h file to see how these pins are declared.</p>
+</div>
+<h1 id="-task-4-add-adc-read">  Task 4 - Add ADC read</h1>
+<h2 id="-1-introducing-the-ti-drivers-api-guide">  1. Introducing the TI Drivers API Guide</h2>
+<p>  The TI Driver APIs are fully documented within a doxygen-generated API Guide. The API Guide is available in TI Resource Explorer &amp; is delivered within the SimpeLink SDK. You can find the TI Drivers API Guide here:</p>
+<p>  If using TI Resource Explorer:</p>
+<blockquote>
+<p><code>[SimpleLink SDK] &gt; Documents &gt; Drivers &gt; TI Drivers Runtime APIs (doxygen)</code>
+</p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/ti_drivers_api_guide.png" alt="TI Drivers API Guide" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  If browsing the downloaded product in your file system:</p>
+<blockquote>
+<p><code>&lt;SimpleLink SDK&gt;\docs\tidrivers\tidriversAPIs.html</code></p>
+</blockquote>
+<p>  For each TI Driver, you will find a generic usage example, as well as instructions on how to configure &amp; initialize the driver. All functions available for each TI Driver are fully documented to help you exercise the capabilities exposed by the driver.</p>
+<p>  For example, we can see the API Guide for the GPIO TI Driver that we are leveraging to blink the LED in the "empty" code example used above.</p>
+<h2 id="-2-let-s-modify-the-example-so-led-is-on-only-if-an-adc-reading-exceeds-a-threshold">  2. Let's modify the example so  LED is ON only if an ADC reading exceeds a threshold</h2>
+<p>  For this section, we will use the ADC TI Driver to take an ADC sample periodically. If the ADC reading is greater than a threshold, we will turn the LED on, else we leave it off. To learn how to do this, we can use the TI Driver code examples while looking at the TI Driver API guides.</p>
+<p>  Let's look at the TI Drivers at <code>[SimpleLink SDK] &gt; Documentation &gt; tidrivers &gt; tidriversAPI.html</code></p>
+<p>  Click on ADC.h to see the API guide for the ADC TI Driver.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/adc_header.png" alt="ADC Driver API Guide" class="img-responsive"></div><p></p>
+</blockquote>
+<h2 id="-3-using-ti-drivers-init-open-use-close-">  3. Using TI Drivers: Init, Open, Use, Close.</h2>
+<p>  The TI Driver API Guides show how to initialize, open, use &amp; close each of the TI Drivers. In this case, we want to learn about how to use the ADC driver.</p>
+<ol>
+<li><p>First off, we see that we need to include the ADC driver header file.</p>
+</li>
+<li><p>Secondly, we see that we have to create a handle for our ADC driver. Once a handle has been created, we have to initialize, then open the driver for use.</p>
+</li>
+<li><p>Once initialized &amp; opened, the driver can be used. In this simple example, we use the <code>ADC_convert()</code> API.</p>
+<p>For our simple example, that's all we need. However, for full details on the ADC driver, you can scroll down the API guide to learn more about the various functions that are exposed by the driver.</p>
+</li>
+</ol>
+<h2 id="-4-adding-a-simple-adc-conversion-to-our-empty-project">  4. Adding a simple ADC conversion to our "empty" project</h2>
+<ol>
+<li><p>Let's copy &amp; paste the include header code to include the ADC driver into the top of our empty.c example:</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_1')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_1" class="lang-c hljs cpp"><span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;ti/drivers/ADC.h&gt;</span>
+</code></pre><span class="code-title"><p>ADC Driver header.</p>
+</span></div></div>
+</li>
+<li><p>Now that we have the driver added to our project, let's be sure to call ADC_init() to initialize the ADC driver. The "empty" project recommends where to place these driver initializations.</p>
+</li>
+<li><p>Next, let's create an ADC handle (we can name it whatever we want, but let's stick to "adc"). Let's also initialize &amp; open the driver so we can use it. We can add this code inside of mainThread, right before the while(1) loop (line 72 in the code).</p>
+<p>We have to make a small change to the code snippet provided by the API guide. We need to change the ADC pin passed into the ADC_open() API to ensure we are using an available ADC channel. We can again refer to the Board.html resource, or take a look directly at the Board.h file included in the empty project example. Referring to the Board.h file, we see that "Board_ADC0" is available.</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_2')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_2" class="lang-c hljs cpp"><span class="hljs-comment">/* Open ADC Driver */</span>
+ADC_Handle adc;
+ADC_Params params;
+ADC_Params_init(&amp;params);
+adc = ADC_open(Board_ADC0, &amp;params);
+<span class="hljs-keyword">if</span> (adc == NULL) {
+ <span class="hljs-comment">// Error initializing ADC channel 0</span>
+ <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>);
+}
+</code></pre><span class="code-title"><p>ADC handle.</p>
+</span></div></div>
+</li>
+<li><p>Finally, let's add the ADC conversion code inside of the <code>while(1)</code> loop to periodically sample the ADC every second. Let's also use a simple if-statement to set the LED high when the ADC result is &gt;= an arbitrary threshold of 100, but off when &lt; threshold. We'll use the GPIO_write() API we learned about earlier in the simple blink "empty" example.  Let's also remove the GPIO_toggle() from the original empty example.</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_3')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_3" class="lang-c hljs cpp"><span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+ <span class="hljs-keyword">int_fast16_t</span> res;
+ <span class="hljs-keyword">uint16_t</span> adcValue;
+ res = ADC_convert(adc, &amp;adcValue);
+ <span class="hljs-keyword">if</span> (res == ADC_STATUS_SUCCESS) {
+     <span class="hljs-keyword">if</span>(adcValue &gt;= <span class="hljs-number">100</span>){  <span class="hljs-comment">// arbitrary threshold</span>
+         GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_ON);
+     } <span class="hljs-keyword">else</span>{
+         GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_OFF);
+     }
+ }
+
+ sleep(time);
+}
+</code></pre><span class="code-title"><p>ADC_convert() with simple LED toggle if-statement.</p>
+</span></div></div>
+</li>
+</ol>
+<h1 id="-task-5-add-uart-print">  Task 5 - Add UART print</h1>
+<h2 id="-1-adding-a-serial-uart-transmission-to-report-adc-readings">  1. Adding a serial UART transmission to report ADC readings</h2>
+<p>  A Display Driver is available, which offers a consistent API set for displaying data across multiple mediums (Serial UART, LCD, etc.). In this case, we will use the Display API to send our ADC readings back to a terminal window.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/display_driver.png" alt="Display Driver API Guide" class="img-responsive"></div><p></p>
+</blockquote>
+<ol>
+<li><p>We can learn more about the Display Driver within the TI Driver API Guide. Click on Display.h to learn about how to use the driver to send data over a serial UART.</p>
+<p>Add the required header file to the top of our empty.c source file:</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_4')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_4" class="lang-c hljs cpp"><span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;ti/display/Display.h&gt;</span>
+</code></pre><span class="code-title"><p>Display Driver header.</p>
+</span></div></div>
+</li>
+<li><p>Just like the ADC driver, we see that we need to include the appropriate header file. We also see that we need to initialize &amp; open the driver before we can use it.</p>
+<p>Next, we need to create a handle for our Display driver, and need to initialize &amp; open the driver. Note that we need to use the "Display_Type_UART" parameter when we open the Display driver to use it for serial communication.</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_5')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_5" class="lang-c hljs cpp">Display_Handle    displayHandle;
+Display_Params    displayParams;
+
+Display_Params_init(&amp;displayParams);
+displayHandle = Display_open(Display_Type_UART, NULL);
+</code></pre><span class="code-title"><p>Display handle.</p>
+</span></div></div>
+</li>
+<li><p>Ultimately, we can use the driver &amp; close it when we no longer need it.</p>
+<p>We can now use the Display_printf() API to send data over serial UART. Let's send our ADC readings after every ADC conversion.</p>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_6')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_6" class="lang-c hljs cpp">Display_printf(displayHandle, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-string">"ADC Reading %d"</span>, adcValue);
+</code></pre><span class="code-title"><p>Display_printf() API.</p>
+</span></div></div>
+</li>
+</ol>
+<h2 id="-2-here-s-the-code-you-should-end-up-with-">  2. Here's the code you should end up with...</h2>
+<div style="display:inline-block"><div style="display:block"><button type="button" class="btn btn-xs btn-warning float-right select-text" style="margin: 0; position: relative;" onclick="SelectText('codeBlock_7')">Select text</button></div><div class="pre-container"><pre><code id="codeBlock_7" class="lang-c hljs cpp">  <span class="hljs-comment">/*
+   *  ======== empty.c ========
+   */</span>
+
+  <span class="hljs-comment">/* For usleep() */</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;unistd.h&gt;</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;stdint.h&gt;</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;stddef.h&gt;</span>
+
+  <span class="hljs-comment">/* Driver Header files */</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;ti/drivers/GPIO.h&gt;</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;ti/drivers/ADC.h&gt;</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;ti/display/Display.h&gt;</span>
+  <span class="hljs-comment">// #include &lt;ti/drivers/I2C.h&gt;</span>
+  <span class="hljs-comment">// #include &lt;ti/drivers/SDSPI.h&gt;</span>
+  <span class="hljs-comment">// #include &lt;ti/drivers/SPI.h&gt;</span>
+  <span class="hljs-comment">// #include &lt;ti/drivers/UART.h&gt;</span>
+  <span class="hljs-comment">// #include &lt;ti/drivers/Watchdog.h&gt;</span>
+
+  <span class="hljs-comment">/* Board Header file */</span>
+  <span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> "Board.h"</span>
+
+  <span class="hljs-comment">/* global variableS FOR GUI COMPOSER */</span>
+  <span class="hljs-keyword">uint16_t</span> adcValue = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">uint16_t</span> threshold = <span class="hljs-number">100</span>;
+  <span class="hljs-keyword">uint16_t</span> trigger = <span class="hljs-number">0</span>;
+
+  <span class="hljs-comment">/*
+   *  ======== mainThread ========
+   */</span>
+
+  <span class="hljs-keyword">void</span> *mainThread(<span class="hljs-keyword">void</span> *arg0)
+  {
+    <span class="hljs-comment">/* ~10 loops/second */</span>
+    <span class="hljs-keyword">uint32_t</span> time = <span class="hljs-number">100000</span>;  <span class="hljs-comment">// update ~10/second</span>
+
+    <span class="hljs-comment">/* Call driver init functions */</span>
+    GPIO_init();
+    ADC_init();
+    <span class="hljs-comment">// I2C_init();</span>
+    <span class="hljs-comment">// SDSPI_init();</span>
+    <span class="hljs-comment">// SPI_init();</span>
+    <span class="hljs-comment">// UART_init();</span>
+    <span class="hljs-comment">// Watchdog_init();</span>
+
+    <span class="hljs-comment">/* Open Display Driver */</span>
+    Display_Handle    displayHandle;
+    Display_Params    displayParams;
+    Display_Params_init(&amp;displayParams);
+    displayHandle = Display_open(Display_Type_UART, NULL);
+
+    <span class="hljs-comment">/* Open ADC Driver */</span>
+    ADC_Handle adc;
+    ADC_Params params;
+    ADC_Params_init(&amp;params);
+    adc = ADC_open(Board_ADC0, &amp;params);
+    <span class="hljs-keyword">if</span> (adc == NULL) {
+        <span class="hljs-comment">// Error initializing ADC channel 0</span>
+        <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+      <span class="hljs-keyword">int_fast16_t</span> res;
+      res = ADC_convert(adc, &amp;adcValue);
+      <span class="hljs-keyword">if</span> (res == ADC_STATUS_SUCCESS) {
+        Display_printf(displayHandle, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-string">"ADC Reading %d"</span>, adcValue);
+        <span class="hljs-keyword">if</span>(adcValue &gt;= threshold){
+          GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_ON);
+          trigger = <span class="hljs-number">1</span>;
+        } <span class="hljs-keyword">else</span>{
+          GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_OFF);
+          trigger = <span class="hljs-number">0</span>;
+        }
+      }
+
+      usleep(time);
+    }
+  }
+</code></pre><span class="code-title"><p>Code example after all of our modifications.</p>
+</span></div></div>
+<h2 id="-3-program-your-launchpad-and-simple-debugging-">  3. Program your LaunchPad (and simple debugging)!</h2>
+<p>  Go ahead and click on the "debug" icon in CCS Cloud to jump into a debug session. We will use some of the basic debug capabilities provided by this browser-based IDE, namely breakpoints &amp; watching variables.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/debug.png" alt="Debugging is available in CCS Cloud IDE" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  Once in your debug session, we will create 2 breakpoints. Click the margin next to the line of code that is inside of the if-statement when the ADC reading is &gt;= to our arbitrary threshold of 100. This will create a breakpoint. Let's also create a breakpoint for when our ADC readings are &lt; the threshold. Notice that the new breakpoint we added now appears in our "Breakpoints" window within the IDE.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/breakpoint_margin.png" alt="Set breakpoints by clicking the margin." class="img-responsive"></div><p></p>
+</blockquote>
+<p>  We also want to use a "watch window" see the latest and greatest ADC readings. To do so, right-click on the variable name that you want to watch - in this case "adcValue." A context window will pop up - click on "Add Watch Expression." Doing so will add this variable to the "Variables" window.</p>
+<p>  Click on the "Resume" button to start executed your code, or press F8 on your keyboard!</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/resume.png" alt="Resume button starts code execution" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  Use an analog sensor (potentiometer) or a simple wire &amp; tie it to VCC or GND to alter the ADC readings. Notice that we hit the breakpoints &amp; we are able to see the ADC results in our variable watch window. Nice!</p>
+<div class="bs-callout bs-callout-info "><h4><span class="glyphicon glyphicon-info-sign gi-2x" style="vertical-align: middle; margin-right: 0.2em;"></span><span style="vertical-align: middle;">Check your Board.h file
+</span></h4>
+<p>  Remember to check your board file to check which pin your ADC0 is connected to.</p>
+</div>
+<h2 id="-4-using-ccs-cloud-s-built-in-serial-monitor-terminal-">  4. Using CCS Cloud's built-in Serial Monitor/Terminal.</h2>
+<p>  You can open up a terminal by going to: Target &gt; Connect COM Port</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/connect_com.png" alt="CCS Cloud includes a built-in serial monitor/terminal" class="img-responsive"></div><p></p>
+</blockquote>
+<p>  Select the COM port your LaunchPad is connected to. <em>The Display Driver defaults to 115200 Baud.</em></p>
+<p>  To see your incoming UART messages, take a look at the Debug tab &amp; enable the "Serial" filter to see your messages.</p>
+<blockquote>
+<p></p><div class="modal-pop" style="cursor:zoom-in;"><img src="./resources/serial_readings.png" alt="Incoming ADC readings." class="img-responsive"></div><p></p>
+</blockquote>
+<h1 id="-great-now-what-">  Great! Now what?</h1>
+<p>  Now that you're a bit more familiar with TI Resource Explorer, have some exposure with the SimpleLink SDK &amp; have successfully built &amp; downloaded a project to your LaunchPad using CCS Cloud, we recommend you start exploring the rest of the SimpleLink SDK.</p>
+<p>  A good place to start is the SimpleLink SDK "Documentation Overview". Here you will find documentation on the SDK &amp; its contents. Happy coding!</p>
+<p>  SimpleLink MSP432 SDK Documentation Overview is available here: <code>[SimpleLink SDK] &gt; Documents &gt; Documentation Overview</code></p>
+<div align="center" style="margin-top: 4em; font-size: smaller;">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="../../web_support/cc_license_icon.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</div>
+
+</div><div class="col-xs-4 col-sm-2 sidebar-offcanvas bs-docs-sidebar hidden-print" id="sidebar-overview"><ul class="nav nav-stacked fixed" id="sidebar"><li><a href="#-introduction">  Introduction</a></li><li><a href="#-prerequisites">  Prerequisites</a><ul class="nav nav-stacked"><ul class="nav nav-stacked"><li><a href="#software-for-desktop-development">Software for desktop development</a></li><li><a href="#hardware-requirements">Hardware requirements</a></li><li><a href="#recommended-reading">Recommended Reading</a></li></ul></ul></li><li><a href="#-task-1-finding-the-blink-led-code-example">  Task 1 - Finding the Blink LED code example</a><ul class="nav nav-stacked"><li><a href="#-1-finding-code-examples-using-ti-resource-explorer">  1. Finding code examples using TI Resource Explorer</a></li><li><a href="#-2-look-inside-the-software-category-in-ti-resource-explorer-">  2. Look inside the "Software" category in TI Resource Explorer.</a></li><li><a href="#-3-expand-the-ti-drivers-folder-to-find-many-examples-on-how-to-exercise-various-ti-drivers-">  3. Expand the "TI Drivers" folder to find many examples on how to exercise various TI Drivers.</a></li><li><a href="#-4-let-s-look-at-the-empty-example-">  4. Let's look at the "empty" example.</a></li></ul></li><li><a href="#-task-2-importing-code-example-into-ide">  Task 2 - Importing code example into IDE</a><ul class="nav nav-stacked"><li><a href="#-1-import-into-ccs-cloud-ide">  1. Import into CCS Cloud IDE</a></li><li><a href="#-2-getting-familiarized-with-ccs-cloud">  2. Getting familiarized with CCS Cloud</a></li><li><a href="#-3-familiarizing-ourselves-with-ti-drivers-resources-documentation">  3. Familiarizing ourselves with TI Drivers resources &amp; documentation</a><ul class="nav nav-stacked"><ul class="nav nav-stacked"><li><a href="#board-html">Board.html</a></li><li><a href="#readme-html">README.html</a></li></ul></ul></li><li><a href="#-4-taking-a-closer-look-at-the-source-files">  4. Taking a closer look at the source files</a></li></ul></li><li><a href="#-task-3-build-your-project">  Task 3 - Build your project</a><ul class="nav nav-stacked"><li><a href="#-1-build-compile-your-source-code">  1. Build/compile your source code</a></li><li><a href="#-2-let-s-load-our-launchpad-">  2. Let's load our LaunchPad!</a></li></ul></li><li><a href="#-task-4-add-adc-read">  Task 4 - Add ADC read</a><ul class="nav nav-stacked"><li><a href="#-1-introducing-the-ti-drivers-api-guide">  1. Introducing the TI Drivers API Guide</a></li><li><a href="#-2-let-s-modify-the-example-so-led-is-on-only-if-an-adc-reading-exceeds-a-threshold">  2. Let's modify the example so  LED is ON only if an ADC reading exceeds a threshold</a></li><li><a href="#-3-using-ti-drivers-init-open-use-close-">  3. Using TI Drivers: Init, Open, Use, Close.</a></li><li><a href="#-4-adding-a-simple-adc-conversion-to-our-empty-project">  4. Adding a simple ADC conversion to our "empty" project</a></li></ul></li><li><a href="#-task-5-add-uart-print">  Task 5 - Add UART print</a><ul class="nav nav-stacked"><li><a href="#-1-adding-a-serial-uart-transmission-to-report-adc-readings">  1. Adding a serial UART transmission to report ADC readings</a></li><li><a href="#-2-here-s-the-code-you-should-end-up-with-">  2. Here's the code you should end up with...</a></li><li><a href="#-3-program-your-launchpad-and-simple-debugging-">  3. Program your LaunchPad (and simple debugging)!</a></li><li><a href="#-4-using-ccs-cloud-s-built-in-serial-monitor-terminal-">  4. Using CCS Cloud's built-in Serial Monitor/Terminal.</a></li></ul></li><li><a href="#-great-now-what-">  Great! Now what?</a></li></ul></div></div></div></div>
+
+
+
+<link rel="stylesheet" href="../../web_support/highlight/styles/zenburn.css">
+<script src="../../web_support/strapdown/vendor/jquery-1.11.2.min.js"></script>
+<script src="../../web_support/strapdown/vendor/bootstrap.min.js"></script>
+<script src="../../web_support/highlight/highlight.pack.js"></script>
+<script type="text/javascript">document.isPreRendered = true;</script><script src="../../web_support/strapdown/v/0.2/strapdown.js"></script>      <div class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">        <div class="vertical-alignment-helper">          <div class="modal-dialog vertical-align-center">             <div class="modal-dialog">               <div class="modal-content" style="margin-left: auto;margin-right: auto;">                 <div class="modal-body">                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>                   <img src="" class="imagepreview img-responsive">                 </div>              </div>            </div>          </div>        </div>      </div>
+
+
+
+</body></html>
