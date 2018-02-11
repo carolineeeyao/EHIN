@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;tirtos_builds_CC1310_LAUNCHXL_release_ccs&apos;" deleteContents="false" description="Delete resource &apos;tirtos_builds_CC1310_LAUNCHXL_release_ccs&apos;" element1="/tirtos_builds_CC1310_LAUNCHXL_release_ccs" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1518381095393"/>
+</session>

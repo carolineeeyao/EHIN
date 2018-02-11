@@ -211,24 +211,22 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         memcpy(packet, packetDataPointer, (packetLength + 1));
 
         int check = 0; //1 if unexpected packet
-        printf("Packet received!\n");
+        //printf("Packet received!\n");
         int i = 0;
         if(packet[0]!=1 || packet[1]!=1){
             check=1;
         }
         for(i=2;i<packetLength+1;i++){
-            printf("%d ", packet[i]);
+            //printf("%d ", packet[i]);
             if(packet[i] != 0)
                 check=1;
         }
-        printf("\n");
+        printf("h\n");
         if(check==0){ //nothing wrong with packet
             /* Toggle pin to indicate RX */
             PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
         }
-//        const unsigned char hello[] = "Hello World\n";
-//        int ret = UART_write(handle, hello, sizeof(hello));
-//        printf("The UART wrote %d bytes\n", ret);
+        UART_write(handle, packet, sizeof(packet));
         RFQueue_nextEntry();
     }
 }
