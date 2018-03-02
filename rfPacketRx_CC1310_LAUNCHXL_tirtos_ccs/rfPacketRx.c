@@ -70,6 +70,9 @@
                                    * Max 30 payload bytes
                                    * 1 status byte (RF_cmdPropRx.rxConf.bAppendStatus = 0x1) */
 
+/* Packet TX Configuration */
+#define PAYLOAD_LENGTH      30
+
 
 
 /***** Prototypes *****/
@@ -201,6 +204,7 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         /* Get current unhandled data entry */
         currentDataEntry = RFQueue_getDataEntry();
 
+
         /* Handle the packet data, located at &currentDataEntry->data:
          * - Length is the first byte with the current configuration
          * - Data starts from the second byte */
@@ -221,12 +225,12 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
             if(packet[i] != 0)
                 check=1;
         }
+        packet[PAYLOAD_LENGTH - 1] = '\n';
         printf("h\n");
-        if(check==0){ //nothing wrong with packet
-            /* Toggle pin to indicate RX */
-            PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
-        }
-        UART_write(handle, packet, sizeof(packet));
+        PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
+
+        int ret = UART_write(handle, packet, sizeof(packet));
+        //printf("The UART wrote %d bytes\n", ret);
         RFQueue_nextEntry();
     }
 }

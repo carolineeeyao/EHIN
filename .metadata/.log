@@ -1044,3 +1044,453 @@ org.eclipse.equinox.p2.core.ProvisionException: No repository found at http://do
 	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:73)
 !SUBENTRY 1 org.eclipse.equinox.p2.metadata.repository 4 1000 2018-02-11 15:32:12.491
 !MESSAGE No repository found at http://downloads.ti.com/ccs/esd/gcc_arm/4.8.
+
+!ENTRY org.eclipse.core.resources 4 1 2018-03-02 15:38:52.565
+!MESSAGE Problems occurred while refreshing local changes
+!SUBENTRY 1 org.eclipse.core.resources 4 1 2018-03-02 15:38:52.565
+!MESSAGE Problems occurred while refreshing local changes
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Errors occurred while refreshing resources with the local file system.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:977)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:960)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1594)
+	at org.eclipse.core.internal.refresh.RefreshJob.runInWorkspace(RefreshJob.java:163)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Contains: The project description file (.project) for 'rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 2 org.eclipse.core.resources 4 271 2018-03-02 15:38:52.565
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+!SUBENTRY 3 org.eclipse.core.resources 4 567 2018-03-02 15:38:52.565
+!MESSAGE The project description file (.project) for 'rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 1 org.eclipse.core.resources 4 1 2018-03-02 15:38:52.565
+!MESSAGE Problems occurred while refreshing local changes
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Errors occurred while refreshing resources with the local file system.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:977)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:960)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1594)
+	at org.eclipse.core.internal.refresh.RefreshJob.runInWorkspace(RefreshJob.java:163)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Contains: The project description file (.project) for 'tirtos_builds_CC1310_LAUNCHXL_release_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 2 org.eclipse.core.resources 4 271 2018-03-02 15:38:52.571
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+!SUBENTRY 3 org.eclipse.core.resources 4 567 2018-03-02 15:38:52.571
+!MESSAGE The project description file (.project) for 'tirtos_builds_CC1310_LAUNCHXL_release_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 1 org.eclipse.core.resources 4 1 2018-03-02 15:38:52.571
+!MESSAGE Problems occurred while refreshing local changes
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Errors occurred while refreshing resources with the local file system.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:977)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:960)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1594)
+	at org.eclipse.core.internal.refresh.RefreshJob.runInWorkspace(RefreshJob.java:163)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Contains: The project description file (.project) for 'RemoteSystemsTempFiles' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 2 org.eclipse.core.resources 4 271 2018-03-02 15:38:52.572
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+!SUBENTRY 3 org.eclipse.core.resources 4 567 2018-03-02 15:38:52.572
+!MESSAGE The project description file (.project) for 'RemoteSystemsTempFiles' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 1 org.eclipse.core.resources 4 1 2018-03-02 15:38:52.572
+!MESSAGE Problems occurred while refreshing local changes
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Errors occurred while refreshing resources with the local file system.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:977)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:960)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1594)
+	at org.eclipse.core.internal.refresh.RefreshJob.runInWorkspace(RefreshJob.java:163)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Contains: The project description file (.project) for 'rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 2 org.eclipse.core.resources 4 271 2018-03-02 15:38:52.572
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+!SUBENTRY 3 org.eclipse.core.resources 4 567 2018-03-02 15:38:52.572
+!MESSAGE The project description file (.project) for 'rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY com.ti.ccstudio.project.core 4 0 2018-03-02 15:38:52.621
+!MESSAGE An internal error was logged by 'com.ti.ccstudio.project.core'.
+!STACK 0
+java.io.FileNotFoundException: /Users/andrewphung/workspace_v7/rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs/.ccsproject (No such file or directory)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(FileOutputStream.java:270)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:213)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:162)
+	at java.io.FileWriter.<init>(FileWriter.java:90)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.saveSettings(CCSProjectSettings.java:644)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.set(CCSProjectSettings.java:571)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.setIsTargetConfigurationManual(CCSProjectSettings.java:379)
+	at com.ti.ccstudio.debug.launch.TargetConfigTracker$1.activeConfigFileChanged(TargetConfigTracker.java:51)
+	at com.ti.ccstudio.system.setup.internal.TargetConfigurationManager.setActiveTargetConfigurationProperty(TargetConfigurationManager.java:308)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.setActiveConfiguration(TargetConfigurationDecorator.java:246)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.setNextAvaliableConfiguration(TargetConfigurationDecorator.java:279)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.resourceRemoved(TargetConfigurationDecorator.java:341)
+	at com.ti.ccstudio.system.setup.ui.SystemSetupResourceMonitor.notifyRemoved(SystemSetupResourceMonitor.java:166)
+	at com.ti.ccstudio.system.setup.ui.SystemSetupResourceMonitor$1$1.run(SystemSetupResourceMonitor.java:82)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.ti.ccstudio.project.core 4 0 2018-03-02 15:38:52.709
+!MESSAGE An internal error was logged by 'com.ti.ccstudio.project.core'.
+!STACK 0
+java.io.FileNotFoundException: /Users/andrewphung/workspace_v7/rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs/.ccsproject (No such file or directory)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(FileOutputStream.java:270)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:213)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:162)
+	at java.io.FileWriter.<init>(FileWriter.java:90)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.saveSettings(CCSProjectSettings.java:644)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.set(CCSProjectSettings.java:571)
+	at com.ti.ccstudio.project.core.internal.settings.CCSProjectSettings.setIsTargetConfigurationManual(CCSProjectSettings.java:379)
+	at com.ti.ccstudio.debug.launch.TargetConfigTracker$1.activeConfigFileChanged(TargetConfigTracker.java:51)
+	at com.ti.ccstudio.system.setup.internal.TargetConfigurationManager.setActiveTargetConfigurationProperty(TargetConfigurationManager.java:308)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.setActiveConfiguration(TargetConfigurationDecorator.java:246)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.setNextAvaliableConfiguration(TargetConfigurationDecorator.java:279)
+	at com.ti.ccstudio.system.setup.ui.TargetConfigurationDecorator.resourceRemoved(TargetConfigurationDecorator.java:341)
+	at com.ti.ccstudio.system.setup.ui.SystemSetupResourceMonitor.notifyRemoved(SystemSetupResourceMonitor.java:166)
+	at com.ti.ccstudio.system.setup.ui.SystemSetupResourceMonitor$1$1.run(SystemSetupResourceMonitor.java:82)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.ti.common.project.core 4 0 2018-03-02 15:38:52.720
+!MESSAGE An internal error was logged by 'com.ti.common.project.core'.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.managedbuilder.internal.core.BuildSettingsUtil.synchBuildInfo(BuildSettingsUtil.java:175)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.updateBuildInfo(ManagedBuildManager.java:1404)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.saveBuildInfo(ManagedBuildManager.java:1366)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils$1.run(CTIProjectCoreUtils.java:1173)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2267)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.saveBuildInfo(CTIProjectCoreUtils.java:1171)
+	at com.ti.ccstudio.project.core.internal.ProjectStateListener.onResourceRemoved(ProjectStateListener.java:278)
+	at com.ti.common.project.core.internal.events.ProjectStateMonitor$ResourceChangeListener$1$2.visit(ProjectStateMonitor.java:258)
+	at com.ti.common.project.core.internal.events.ProjectStateMonitor.notifyListeners(ProjectStateMonitor.java:848)
+	at com.ti.common.project.core.internal.events.ProjectStateMonitor.access$2(ProjectStateMonitor.java:837)
+	at com.ti.common.project.core.internal.events.ProjectStateMonitor$ResourceChangeListener$1.visit(ProjectStateMonitor.java:256)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:64)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:75)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:75)
+	at org.eclipse.core.internal.events.ResourceDelta.accept(ResourceDelta.java:48)
+	at com.ti.common.project.core.internal.events.ProjectStateMonitor$ResourceChangeListener.resourceChanged(ProjectStateMonitor.java:229)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastBuildEvent(Workspace.java:360)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:147)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:235)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.jobs 4 2 2018-03-02 15:39:24.885
+!MESSAGE Deadlock detected. All locks owned by thread Worker-14 will be suspended.
+!STACK 0
+java.lang.IllegalStateException
+	at org.eclipse.core.internal.jobs.DeadlockDetector.reportDeadlock(DeadlockDetector.java:599)
+	at org.eclipse.core.internal.jobs.DeadlockDetector.lockWaitStart(DeadlockDetector.java:403)
+	at org.eclipse.core.internal.jobs.LockManager.addLockWaitThread(LockManager.java:154)
+	at org.eclipse.core.internal.jobs.OrderedLock.doAcquire(OrderedLock.java:168)
+	at org.eclipse.core.internal.jobs.OrderedLock.acquire(OrderedLock.java:106)
+	at org.eclipse.core.internal.jobs.OrderedLock.acquire(OrderedLock.java:82)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:230)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.ccstudio.project.core.internal.build.ProjectScannerInfoManager$UpdateJob.invokeScannerConfigBuilder(ProjectScannerInfoManager.java:141)
+	at com.ti.ccstudio.project.core.internal.build.ProjectScannerInfoManager$UpdateJob.runInWorkspace(ProjectScannerInfoManager.java:117)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.core.jobs 4 2 2018-03-02 15:39:24.886
+!MESSAGE Thread Worker-7 has locks: R/, P/tirtos_builds_CC1310_LAUNCHXL_release_ccs and is waiting for lock OrderedLock (12)
+!SUBENTRY 1 org.eclipse.core.jobs 4 2 2018-03-02 15:39:24.886
+!MESSAGE Thread Worker-14 has locks: OrderedLock (12) and is waiting for lock R/
+
+!ENTRY org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.306
+!MESSAGE description is being loadded
+
+!ENTRY org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.307
+!MESSAGE description is being loadded
+!STACK 1
+org.eclipse.core.runtime.CoreException: description is being loadded
+	at org.eclipse.cdt.internal.core.settings.model.ExceptionFactory.createCoreException(ExceptionFactory.java:22)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:878)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:846)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingsManager$1.run(CExternalSettingsManager.java:430)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager$5.run(CProjectDescriptionManager.java:523)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2267)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runAtomic(CProjectDescriptionManager.java:519)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runWspModification(CProjectDescriptionManager.java:484)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runWspModification(CProjectDescriptionManager.java:454)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingsManager.settingsChanged(CExternalSettingsManager.java:439)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingContainerFactoryWithListener.notifySettingsChange(CExternalSettingContainerFactoryWithListener.java:48)
+	at org.eclipse.cdt.internal.core.settings.model.CfgExportSettingContainerFactory.handleEvent(CfgExportSettingContainerFactory.java:253)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.notifyListeners(CProjectDescriptionManager.java:2212)
+	at org.eclipse.cdt.internal.core.settings.model.AbstractCProjectDescriptionStorage.fireLoadedEvent(AbstractCProjectDescriptionStorage.java:268)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:264)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings$ConfigurationReference.resolve(AConfigurationSettings.java:151)
+	at org.eclipse.rtsc.xdctools.buildDefinitions.XDC.util.XDCManagedBuildCoreUtils.findReferencedRTSCConfiguration(XDCManagedBuildCoreUtils.java:162)
+	at org.eclipse.rtsc.xdctools.buildDefinitions.XDC.util.XDCManagedBuildCoreUtils.findRTSCConfiguration(XDCManagedBuildCoreUtils.java:149)
+	at org.eclipse.rtsc.builddefinitions.xdc.settings.XDCConfigurationSettingsContributor.getProductsSettingSource(XDCConfigurationSettingsContributor.java:89)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getInheritedProductsSource(AConfigurationSettings.java:867)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getProducts(AConfigurationSettings.java:600)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getProducts(AConfigurationSettings.java:538)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getProducts(CTIProjectCoreUtils.java:1559)
+	at com.ti.common.project.core.internal.build.CTIConfigurationBuildMacroSupplier.getDelegateMacro(CTIConfigurationBuildMacroSupplier.java:248)
+	at com.ti.common.project.core.internal.build.CTIConfigurationBuildMacroSupplier.getMacro(CTIConfigurationBuildMacroSupplier.java:204)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ExternalExtensionMacroSupplier.getVariable(ExternalExtensionMacroSupplier.java:151)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableManager.getVariable(SupplierBasedCdtVariableManager.java:31)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.BuildVariablesContributor.getVariable(BuildVariablesContributor.java:127)
+	at org.eclipse.cdt.internal.core.cdtvariables.BuildSystemVariableSupplier.getMacro(BuildSystemVariableSupplier.java:106)
+	at org.eclipse.cdt.internal.core.cdtvariables.CoreMacroSupplierBase.getVariable(CoreMacroSupplierBase.java:23)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableManager.getVariable(SupplierBasedCdtVariableManager.java:31)
+	at org.eclipse.cdt.internal.core.cdtvariables.CdtVariableManager.getVariable(CdtVariableManager.java:62)
+	at org.eclipse.cdt.managedbuilder.internal.macros.CoreMacrosSupplier.getVariable(CoreMacrosSupplier.java:40)
+	at org.eclipse.cdt.managedbuilder.internal.macros.CoreMacrosSupplier.getMacro(CoreMacrosSupplier.java:30)
+	at org.eclipse.cdt.managedbuilder.internal.macros.BuildCdtVariablesSupplierBase.getVariable(BuildCdtVariablesSupplierBase.java:43)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableManager.getVariable(SupplierBasedCdtVariableManager.java:31)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveMacro(SupplierBasedCdtVariableSubstitutor.java:288)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveMacro(SupplierBasedCdtVariableSubstitutor.java:275)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.getResolvedMacro(SupplierBasedCdtVariableSubstitutor.java:260)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveToString(SupplierBasedCdtVariableSubstitutor.java:222)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveToString(SupplierBasedCdtVariableSubstitutor.java:241)
+	at org.eclipse.cdt.utils.cdtvariables.CdtVariableResolver.resolveToString(CdtVariableResolver.java:122)
+	at org.eclipse.cdt.managedbuilder.internal.macros.BuildMacroProvider.resolveValue(BuildMacroProvider.java:229)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getBuildLocation(Builder.java:1883)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getBuildFullPath(ManagedBuildManager.java:3887)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getDefaultOutputSettings(Builder.java:2759)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getOutputEntries(Builder.java:2744)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.BuildBuildData.getOutputDirectories(BuildBuildData.java:54)
+	at org.eclipse.cdt.core.settings.model.extension.impl.CDefaultBuildData.copySettingsFrom(CDefaultBuildData.java:56)
+	at org.eclipse.cdt.internal.core.settings.model.CBuildSettingCache.<init>(CBuildSettingCache.java:43)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.copyBuildData(CConfigurationDescriptionCache.java:240)
+	at org.eclipse.cdt.core.settings.model.extension.impl.CDefaultConfigurationData.copySettingsFrom(CDefaultConfigurationData.java:106)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.loadData(CConfigurationDescriptionCache.java:150)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescription.loadDatas(CProjectDescription.java:196)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.loadProjectDescription(XmlProjectDescriptionStorage.java:500)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:237)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.common.project.core.variables.ProductPathVariableResolver.doGetValue(ProductPathVariableResolver.java:76)
+	at com.ti.common.project.core.variables.APathVariableResolver.getValue(APathVariableResolver.java:76)
+	at org.eclipse.core.internal.resources.ProjectVariableProviderManager$Descriptor.getValue(ProjectVariableProviderManager.java:62)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.internalGetValue(ProjectPathVariableManager.java:157)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:230)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:215)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveURI(ProjectPathVariableManager.java:283)
+	at org.eclipse.core.internal.localstore.FileStoreRoot.createStore(FileStoreRoot.java:115)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.getStore(FileSystemResourceManager.java:542)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.fastIsSynchronized(FileSystemResourceManager.java:463)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.isSynchronized(FileSystemResourceManager.java:735)
+	at org.eclipse.core.internal.resources.Resource.isSynchronized(Resource.java:1446)
+	at org.eclipse.core.internal.refresh.PollingMonitor.poll(PollingMonitor.java:176)
+	at org.eclipse.core.internal.refresh.PollingMonitor.run(PollingMonitor.java:135)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.308
+!MESSAGE description is being loadded
+
+!ENTRY org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.418
+!MESSAGE description is being loadded
+
+!ENTRY org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.419
+!MESSAGE description is being loadded
+!STACK 1
+org.eclipse.core.runtime.CoreException: description is being loadded
+	at org.eclipse.cdt.internal.core.settings.model.ExceptionFactory.createCoreException(ExceptionFactory.java:22)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:878)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:846)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingsManager$1.run(CExternalSettingsManager.java:430)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager$5.run(CProjectDescriptionManager.java:523)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2267)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runAtomic(CProjectDescriptionManager.java:519)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runWspModification(CProjectDescriptionManager.java:484)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.runWspModification(CProjectDescriptionManager.java:454)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingsManager.settingsChanged(CExternalSettingsManager.java:439)
+	at org.eclipse.cdt.internal.core.settings.model.CExternalSettingContainerFactoryWithListener.notifySettingsChange(CExternalSettingContainerFactoryWithListener.java:48)
+	at org.eclipse.cdt.internal.core.settings.model.CfgExportSettingContainerFactory.handleEvent(CfgExportSettingContainerFactory.java:253)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.notifyListeners(CProjectDescriptionManager.java:2212)
+	at org.eclipse.cdt.internal.core.settings.model.AbstractCProjectDescriptionStorage.fireLoadedEvent(AbstractCProjectDescriptionStorage.java:268)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:264)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings$ConfigurationReference.resolve(AConfigurationSettings.java:151)
+	at org.eclipse.rtsc.xdctools.buildDefinitions.XDC.util.XDCManagedBuildCoreUtils.findReferencedRTSCConfiguration(XDCManagedBuildCoreUtils.java:162)
+	at org.eclipse.rtsc.xdctools.buildDefinitions.XDC.util.XDCManagedBuildCoreUtils.findRTSCConfiguration(XDCManagedBuildCoreUtils.java:149)
+	at org.eclipse.rtsc.builddefinitions.xdc.settings.XDCConfigurationSettingsContributor.getProductsSettingSource(XDCConfigurationSettingsContributor.java:89)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getInheritedProductsSource(AConfigurationSettings.java:867)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getProducts(AConfigurationSettings.java:600)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getProducts(AConfigurationSettings.java:538)
+	at com.ti.common.project.core.internal.settings.AConfigurationSettings.getProduct(AConfigurationSettings.java:618)
+	at com.ti.ccstudio.energia.core.internal.settings.EnergiaConfigurationSettings.getEnergiaProduct(EnergiaConfigurationSettings.java:72)
+	at com.ti.ccstudio.energia.core.internal.util.EnergiaProjectUtils.getEnergiaProduct(EnergiaProjectUtils.java:125)
+	at com.ti.ccstudio.energia.core.internal.build.EnergiaConfigurationEnvironmentSupplierDelegate.getVariables(EnergiaConfigurationEnvironmentSupplierDelegate.java:31)
+	at com.ti.common.project.core.internal.build.CTIConfigurationEnvironmentSupplier.internalGetAllVariables(CTIConfigurationEnvironmentSupplier.java:65)
+	at com.ti.common.project.core.internal.build.CTIConfigurationEnvironmentSupplier.getVariable(CTIConfigurationEnvironmentSupplier.java:51)
+	at org.eclipse.cdt.managedbuilder.internal.envvar.ExternalExtensionEnvironmentSupplier.getVariable(ExternalExtensionEnvironmentSupplier.java:67)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.BuildEnvironmentContributor.getVariable(BuildEnvironmentContributor.java:54)
+	at org.eclipse.cdt.internal.core.envvar.BuildSystemEnvironmentSupplier.getVariable(BuildSystemEnvironmentSupplier.java:170)
+	at org.eclipse.cdt.internal.core.envvar.EnvironmentVariableManager.getVariable(EnvironmentVariableManager.java:156)
+	at org.eclipse.cdt.internal.core.envvar.EnvironmentVariableManager.getVariable(EnvironmentVariableManager.java:186)
+	at org.eclipse.cdt.internal.core.cdtvariables.EnvironmentVariableSupplier.getMacro(EnvironmentVariableSupplier.java:137)
+	at org.eclipse.cdt.internal.core.cdtvariables.CoreMacroSupplierBase.getVariable(CoreMacroSupplierBase.java:23)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableManager.getVariable(SupplierBasedCdtVariableManager.java:31)
+	at org.eclipse.cdt.internal.core.cdtvariables.CdtVariableManager.getVariable(CdtVariableManager.java:62)
+	at org.eclipse.cdt.managedbuilder.internal.macros.CoreMacrosSupplier.getVariable(CoreMacrosSupplier.java:40)
+	at org.eclipse.cdt.managedbuilder.internal.macros.CoreMacrosSupplier.getMacro(CoreMacrosSupplier.java:30)
+	at org.eclipse.cdt.managedbuilder.internal.macros.BuildCdtVariablesSupplierBase.getVariable(BuildCdtVariablesSupplierBase.java:43)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableManager.getVariable(SupplierBasedCdtVariableManager.java:31)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveMacro(SupplierBasedCdtVariableSubstitutor.java:288)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveMacro(SupplierBasedCdtVariableSubstitutor.java:275)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.getResolvedMacro(SupplierBasedCdtVariableSubstitutor.java:260)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveToString(SupplierBasedCdtVariableSubstitutor.java:222)
+	at org.eclipse.cdt.utils.cdtvariables.SupplierBasedCdtVariableSubstitutor.resolveToString(SupplierBasedCdtVariableSubstitutor.java:241)
+	at org.eclipse.cdt.utils.cdtvariables.CdtVariableResolver.resolveToString(CdtVariableResolver.java:122)
+	at org.eclipse.cdt.managedbuilder.internal.macros.BuildMacroProvider.resolveValue(BuildMacroProvider.java:229)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getBuildLocation(Builder.java:1883)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getBuildFullPath(ManagedBuildManager.java:3887)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getDefaultOutputSettings(Builder.java:2759)
+	at org.eclipse.cdt.managedbuilder.internal.core.Builder.getOutputEntries(Builder.java:2744)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.BuildBuildData.getOutputDirectories(BuildBuildData.java:54)
+	at org.eclipse.cdt.core.settings.model.extension.impl.CDefaultBuildData.copySettingsFrom(CDefaultBuildData.java:56)
+	at org.eclipse.cdt.internal.core.settings.model.CBuildSettingCache.<init>(CBuildSettingCache.java:43)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.copyBuildData(CConfigurationDescriptionCache.java:240)
+	at org.eclipse.cdt.core.settings.model.extension.impl.CDefaultConfigurationData.copySettingsFrom(CDefaultConfigurationData.java:106)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.loadData(CConfigurationDescriptionCache.java:150)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescription.loadDatas(CProjectDescription.java:196)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.loadProjectDescription(XmlProjectDescriptionStorage.java:500)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:237)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.common.project.core.variables.ProductPathVariableResolver.doGetValue(ProductPathVariableResolver.java:76)
+	at com.ti.common.project.core.variables.APathVariableResolver.getValue(APathVariableResolver.java:76)
+	at org.eclipse.core.internal.resources.ProjectVariableProviderManager$Descriptor.getValue(ProjectVariableProviderManager.java:62)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.internalGetValue(ProjectPathVariableManager.java:157)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:230)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:215)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveURI(ProjectPathVariableManager.java:283)
+	at org.eclipse.core.internal.localstore.FileStoreRoot.createStore(FileStoreRoot.java:115)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.getStore(FileSystemResourceManager.java:542)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.fastIsSynchronized(FileSystemResourceManager.java:463)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.isSynchronized(FileSystemResourceManager.java:735)
+	at org.eclipse.core.internal.resources.Resource.isSynchronized(Resource.java:1446)
+	at org.eclipse.core.internal.refresh.PollingMonitor.poll(PollingMonitor.java:176)
+	at org.eclipse.core.internal.refresh.PollingMonitor.run(PollingMonitor.java:135)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.core 4 0 2018-03-02 15:39:25.420
+!MESSAGE description is being loadded
+
+!ENTRY org.eclipse.ui.ide 4 4 2018-03-02 15:39:29.810
+!MESSAGE Problems saving workspace
+
+!ENTRY org.eclipse.ui.ide 2 1 2018-03-02 15:39:29.811
+!MESSAGE Problems occurred while trying to save the state of the workbench.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2018-03-02 15:39:29.811
+!MESSAGE The project description file (.project) for 'RemoteSystemsTempFiles' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.rse.ui 4 0 2018-03-02 15:39:30.076
+!MESSAGE Error refreshing remote edit project
+!STACK 0
+java.lang.NullPointerException
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getToolChainPropertyProvider(CTIProjectCoreUtils.java:517)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getLinkerTool(CTIProjectCoreUtils.java:556)
+	at com.ti.ccstudio.project.core.internal.options.OutputFileOptionValueHandler.handleValue(OutputFileOptionValueHandler.java:49)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.performValueHandlerEvent(ManagedBuildManager.java:3276)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.performValueHandlerEvent(ManagedBuildManager.java:3228)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.load(ConfigurationDataProvider.java:392)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.loadConfiguration(ConfigurationDataProvider.java:557)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.loadData(CConfigurationDescriptionCache.java:136)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescription.loadDatas(CProjectDescription.java:196)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.loadProjectDescription(XmlProjectDescriptionStorage.java:500)
+	at org.eclipse.cdt.internal.core.settings.model.xml.XmlProjectDescriptionStorage.getProjectDescription(XmlProjectDescriptionStorage.java:237)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescriptionInternal(CProjectDescriptionManager.java:437)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:419)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:413)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.getProjectDescription(CProjectDescriptionManager.java:406)
+	at org.eclipse.cdt.core.model.CoreModel.getProjectDescription(CoreModel.java:1424)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.findExistingDefaultConfiguration(ManagedBuildInfo.java:268)
+	at org.eclipse.cdt.managedbuilder.internal.core.ManagedBuildInfo.getDefaultConfiguration(ManagedBuildInfo.java:254)
+	at com.ti.common.project.core.util.CTIProjectCoreUtils.getActiveBuildConfiguration(CTIProjectCoreUtils.java:450)
+	at com.ti.common.project.core.variables.ProductPathVariableResolver.doGetValue(ProductPathVariableResolver.java:76)
+	at com.ti.common.project.core.variables.APathVariableResolver.getValue(APathVariableResolver.java:76)
+	at org.eclipse.core.internal.resources.ProjectVariableProviderManager$Descriptor.getValue(ProjectVariableProviderManager.java:62)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.internalGetValue(ProjectPathVariableManager.java:157)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:230)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveVariable(ProjectPathVariableManager.java:215)
+	at org.eclipse.core.internal.resources.ProjectPathVariableManager.resolveURI(ProjectPathVariableManager.java:283)
+	at org.eclipse.core.internal.resources.AliasManager.addToLocationsMap(AliasManager.java:364)
+	at org.eclipse.core.internal.resources.AliasManager.buildLocationsMap(AliasManager.java:403)
+	at org.eclipse.core.internal.resources.AliasManager.updateStructureChanges(AliasManager.java:745)
+	at org.eclipse.core.internal.resources.AliasManager.hasNoAliases(AliasManager.java:618)
+	at org.eclipse.core.internal.resources.AliasManager.computeAliases(AliasManager.java:434)
+	at org.eclipse.core.internal.localstore.RefreshLocalAliasVisitor.createResource(RefreshLocalAliasVisitor.java:35)
+	at org.eclipse.core.internal.localstore.RefreshLocalVisitor.synchronizeExistence(RefreshLocalVisitor.java:207)
+	at org.eclipse.core.internal.localstore.RefreshLocalVisitor.visit(RefreshLocalVisitor.java:284)
+	at org.eclipse.core.internal.localstore.UnifiedTree.accept(UnifiedTree.java:111)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:974)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:960)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1594)
+	at org.eclipse.rse.internal.files.ui.resources.SystemRemoteEditManager.refreshRemoteEditProject(SystemRemoteEditManager.java:794)
+	at org.eclipse.rse.internal.files.ui.Activator.stop(Activator.java:182)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:830)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:1)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.stop(BundleContextImpl.java:823)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle.stopWorker0(EquinoxBundle.java:946)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.stopWorker(EquinoxBundle.java:314)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:636)
+	at org.eclipse.osgi.container.Module.stop(Module.java:498)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.decStartLevel(ModuleContainer.java:1661)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1580)
+	at org.eclipse.osgi.container.SystemModule.stopWorker(SystemModule.java:253)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule.stopWorker(EquinoxBundle.java:147)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:636)
+	at org.eclipse.osgi.container.Module.stop(Module.java:498)
+	at org.eclipse.osgi.container.SystemModule.stop(SystemModule.java:191)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule$1.run(EquinoxBundle.java:165)
+	at java.lang.Thread.run(Thread.java:745)
+!SESSION 2018-03-02 15:39:46.104 -----------------------------------------------
+eclipse.buildId=4.6.0.I20160606-1100
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product -keyring /Users/andrewphung/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product com.ti.ccstudio.branding.product -keyring /Users/andrewphung/.eclipse_keyring -showlocation
+
+!ENTRY com.ti.common.core 4 0 2018-03-02 15:39:48.037
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2018-03-02 15:39:48.038
+!MESSAGE debugServerDir=/Applications/ti/ccsv7/ccs_base/DebugServer
+
+!ENTRY org.eclipse.core.net 1 0 2018-03-02 15:39:48.675
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences

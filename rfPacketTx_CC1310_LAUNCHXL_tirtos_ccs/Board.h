@@ -44,6 +44,7 @@ extern "C" {
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/UART.h>
 #include <ti/drivers/Watchdog.h>
+#include <ti/drivers/I2C.h>
 
 #include "CC1310_LAUNCHXL.h"
 
@@ -91,7 +92,6 @@ extern "C" {
 #define Board_GPTIMER3B         CC1310_LAUNCHXL_GPTIMER3B
 
 #define Board_I2C0              CC1310_LAUNCHXL_I2C0
-#define Board_I2C_TMP           CC1310_LAUNCHXL_I2C0
 
 #define Board_NVS0              CC1310_LAUNCHXL_NVSCC26XX0
 #define Board_NVS1              CC1310_LAUNCHXL_NVSSPI25X0
@@ -126,7 +126,12 @@ extern "C" {
 #define Board_WATCHDOG0         CC1310_LAUNCHXL_WATCHDOG0
 
 /* Board specific I2C addresses */
-#define Board_TMP_ADDR          (0x40)
+#define TMP007_I2C_ADDRESS          (0x40)
+#define OPT3001_I2C_ADDRESS         (0x47)
+#define BMP280_I2C_ADDRESS          (0x69)
+#define BMM150_I2C_ADDRESS          (0x13)
+#define BME380_I2C_ADDRESS          (0x77)
+
 #define Board_SENSORS_BP_TMP_ADDR Board_TMP_ADDR
 
 /*
@@ -141,6 +146,7 @@ extern "C" {
 #define Board_initSPI()         SPI_init()
 #define Board_initUART()        UART_init()
 #define Board_initWatchdog()    Watchdog_init()
+#define Board_initI2C()         I2C_init()
 
 /*
  * These macros are provided for backwards compatibility.

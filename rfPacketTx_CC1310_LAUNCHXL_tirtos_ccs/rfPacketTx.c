@@ -31,8 +31,15 @@
  */
 
 /***** Includes *****/
+/* XDCtools Header files */
+#include <xdc/std.h>
+#include <xdc/runtime/System.h>
+
 /* Standard C Libraries */
 #include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <math.h>
 
 /* XDCtools Header files */
 #include <xdc/std.h>
@@ -41,10 +48,14 @@
 /* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/knl/Task.h>
+#include <ti/sysbios/knl/Semaphore.h>
+#include <ti/sysbios/gates/GateMutexPri.h>
 
 /* TI Drivers */
 #include <ti/drivers/rf/RF.h>
+#include <ti/drivers/I2C.h>
 #include <ti/drivers/PIN.h>
+#include <ti/drivers/UART.h>
 #include <ti/drivers/pin/PINCC26XX.h>
 
 /* Driverlib Header files */
@@ -52,6 +63,8 @@
 
 /* Board Header files */
 #include "Board.h"
+#include "string.h"
+#include "stdio.h"
 
 /* Application Header files */
 #include "smartrf_settings/smartrf_settings.h"
@@ -83,8 +96,38 @@ static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
 
 static uint8_t packet[PAYLOAD_LENGTH];
-static uint16_t seqNumber;
 static PIN_Handle pinHandle;
+
+/* Sensor Variables */
+uint16_t        temperature;
+uint16_t        illuminance;
+uint16_t        SN;
+uint16_t        PPB;
+uint16_t        TEMP;
+uint16_t        RH;
+uint16_t        RawSensor;
+uint16_t        TempDigital;
+uint16_t        RHDigital;
+uint8_t         txBuffer[4];
+uint8_t         rxBuffer[50];
+
+/* I2C handle */
+I2C_Handle      i2c;
+I2C_Params      i2cParams;
+I2C_Transaction i2cTransaction;
+
+/* UART handle */
+static UART_Handle      handle;
+static UART_Params      params;
+
+#define TASKSTACKSIZE       640
+
+#define REGISTER_LENGTH                     2
+#define DATA_LENGTH                         2
+#define TMP007_REG_ADDR_LOCAL_TEMP          0x01
+#define TMP007_REG_ADDR_OBJ_TEMP            0x03
+#define OPT3001_RESULT                      0x00
+#define OPT3001_CONFIGURATION               0x01
 
 /*
  * Application LED pin configuration table:
@@ -118,6 +161,26 @@ void TxTask_init(PIN_Handle inPinHandle)
     Task_construct(&txTask, txTaskFunction, &txTaskParams, NULL);
 }
 
+bool readI2C(uint8_t ui8Addr, uint8_t txCount, uint8_t rxCount) {
+    bool result = false;
+
+    //Point I2C parameters to correct values.
+    i2cTransaction.slaveAddress = ui8Addr;
+    i2cTransaction.writeBuf = txBuffer;
+    i2cTransaction.writeCount = txCount;
+    i2cTransaction.readBuf = rxBuffer;
+    i2cTransaction.readCount = rxCount;
+    //Perform I2C read
+    result = I2C_transfer(i2c, &i2cTransaction);
+    if (result) {
+        printf("🎊 Yay! 🎊\n");
+    }
+    else {
+        printf("🤬 Boooo!\n");
+    }
+    return(result);
+}
+
 static void txTaskFunction(UArg arg0, UArg arg1)
 {
 #ifdef POWER_MEASUREMENT
@@ -146,17 +209,80 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
     /* Get current time */
     curtime = RF_getCurrentTime();
-    while(1)
-    {
+
+    /* Create I2C for usage */
+    I2C_Params_init(&i2cParams);
+    i2cParams.bitRate = I2C_400kHz;
+    i2c = I2C_open(Board_I2C0, &i2cParams);
+
+    /* Initialize Uart */
+    UART_Params_init(&params);
+    params.baudRate = 9600;
+    params.writeDataMode = UART_DATA_BINARY;
+    params.readDataMode = UART_DATA_BINARY;
+    params.readReturnMode = UART_RETURN_FULL;
+    params.readEcho = UART_ECHO_OFF;
+    handle = UART_open(Board_UART0, &params);
+    if (!handle) {
+        printf("UART did not open");
+    }
+//    UART_write(handle, 0, 1);//triggers a measurement that takes about 1 second
+//    char c[] = "c\n";
+//    char five[] = "5\n";
+//    UART_write(handle, c, sizeof(c));//'c'ontinuous data output mode
+//    UART_write(handle, five, sizeof(five));//measurement period
+
+    while(1) {
+        bool success;
+        uint16_t raw_data;
+
+        //temp
+        txBuffer[0] = TMP007_REG_ADDR_LOCAL_TEMP;
+        success = readI2C(TMP007_I2C_ADDRESS, 1, REGISTER_LENGTH);
+        if (success) {
+            txBuffer[0] = TMP007_REG_ADDR_OBJ_TEMP;
+            success = readI2C(TMP007_I2C_ADDRESS, 1, REGISTER_LENGTH);
+        }
+        raw_data = (rxBuffer[0]<<6) | (rxBuffer[1]>>2);
+        if (rxBuffer[0] & 0x80) {
+            raw_data |= 0xF000;
+        }
+        temperature = raw_data/32;
+
+        //opt
+        txBuffer[0] = OPT3001_CONFIGURATION;
+        txBuffer[1] = 0xC4;//CONFIG_ENABLE
+        txBuffer[2] = 0x10;//CONFIG_ENABLE
+        success = readI2C(OPT3001_I2C_ADDRESS, 3, 0);
+        if (success) {
+            printf("Conf: 0x%x 0x%x (C)\n", rxBuffer[0], rxBuffer[1]);
+        }
+        success = readI2C(OPT3001_I2C_ADDRESS, 1, 2);
+        if (success) {
+            txBuffer[0] = OPT3001_RESULT;
+            success = readI2C(OPT3001_I2C_ADDRESS, 1, DATA_LENGTH);
+        }
+        raw_data = (rxBuffer[0] << 8) | (rxBuffer[0] >> 8 & 0xFF);
+        uint16_t e, m;
+        m = raw_data & 0x0FFF;
+        e = (raw_data & 0xF000) >> 12;
+        illuminance = m * (0.01 * exp2(e));
+
+        //IAQ
+        //UART_read(handle, rxBuffer, sizeof(rxBuffer));
+
+        //bmp
+        //success = sensor_common_read_reg(ADDR_PRESS_MSB, data, MEAS_DATA_SIZE);
+
         /* Create packet with incrementing sequence number and random payload */
-//        packet[0] = (uint8_t)(seqNumber >> 8);
-//        packet[1] = (uint8_t)(seqNumber++);
-        packet[0] = 1;
-        packet[1] = 1;
+        packet[0] = temperature;
+        packet[1] = m;
+        packet[2] = e;
+        packet[3] = illuminance;
         uint8_t i;
-        for (i = 2; i < PAYLOAD_LENGTH; i++)
+        for (i = 4; i < PAYLOAD_LENGTH; i++)
         {
-            packet[i] = 0;
+            packet[i] = 66;
         }
 
         /* Set absolute TX time to utilize automatic power management */
@@ -238,6 +364,8 @@ int main(void)
 {
     /* Call driver init functions. */
     Board_initGeneral();
+    Board_initUART();
+    Board_initI2C();
 
     /* Open LED pins */
     ledPinHandle = PIN_open(&ledPinState, pinTable);
