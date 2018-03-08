@@ -75,7 +75,7 @@
 
 /* Packet TX Configuration */
 #define PAYLOAD_LENGTH      30
-#define PACKET_INTERVAL     (uint32_t)(4000000*0.5f) /* Set packet interval to 500ms */
+#define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 500ms */
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -95,7 +95,7 @@ static RF_Handle rfHandle;
 static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
 
-static uint8_t packet[PAYLOAD_LENGTH];
+static uint16_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
 /* Sensor Variables */

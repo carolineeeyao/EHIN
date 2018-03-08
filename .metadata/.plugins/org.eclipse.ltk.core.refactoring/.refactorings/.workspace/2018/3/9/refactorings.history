@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;rfPacketRx_CC1310_LAUNCHXL_nortos_ccs&apos;" deleteContents="false" description="Delete resource &apos;rfPacketRx_CC1310_LAUNCHXL_nortos_ccs&apos;" element1="/rfPacketRx_CC1310_LAUNCHXL_nortos_ccs" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1520026480436"/>&#x0A;<refactoring comment="Delete resource &apos;rfPacketTx_CC1310_LAUNCHXL_nortos_ccs&apos;" deleteContents="false" description="Delete resource &apos;rfPacketTx_CC1310_LAUNCHXL_nortos_ccs&apos;" element1="/rfPacketTx_CC1310_LAUNCHXL_nortos_ccs" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1520026484999"/>
-</session>

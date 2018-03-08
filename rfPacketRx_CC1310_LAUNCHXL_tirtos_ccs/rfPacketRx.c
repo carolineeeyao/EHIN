@@ -121,7 +121,7 @@ static PIN_Handle pinHandle;
 static UART_Handle      handle;
 static UART_Params      params;
 
-static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
+static uint16_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
 
 /*
  * Application LED pin configuration table:
@@ -214,18 +214,18 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         /* Copy the payload + the status byte to the packet variable */
         memcpy(packet, packetDataPointer, (packetLength + 1));
 
-        int check = 0; //1 if unexpected packet
-        //printf("Packet received!\n");
-        int i = 0;
-        if(packet[0]!=1 || packet[1]!=1){
-            check=1;
-        }
-        for(i=2;i<packetLength+1;i++){
-            //printf("%d ", packet[i]);
-            if(packet[i] != 0)
-                check=1;
-        }
-        packet[PAYLOAD_LENGTH - 1] = '\n';
+//        int check = 0; //1 if unexpected packet
+//        //printf("Packet received!\n");
+//        int i = 0;
+//        if(packet[0]!=1 || packet[1]!=1){
+//            check=1;
+//        }
+//        for(i=2;i<packetLength+1;i++){
+//            //printf("%d ", packet[i]);
+//            if(packet[i] != 0)
+//                check=1;
+//        }
+//        packet[PAYLOAD_LENGTH - 1] = '\n';
         printf("h\n");
         PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
 
