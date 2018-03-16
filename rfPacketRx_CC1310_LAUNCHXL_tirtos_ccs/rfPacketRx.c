@@ -219,7 +219,6 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
 
         int ret = UART_write(handle, packet, sizeof(packet));
-        //printf("The UART wrote %d bytes\n", ret);
         RFQueue_nextEntry();
     }
 }
@@ -228,7 +227,7 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
  *  ======== main ========
  */
 int main(void)
-{
+    {
     /* Call driver init functions. */
     Board_initGeneral();
     Board_initUART();

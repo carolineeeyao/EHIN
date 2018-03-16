@@ -40,6 +40,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <math.h>
+#include <time.h>
 
 /* XDCtools Header files */
 #include <xdc/std.h>
@@ -99,6 +100,8 @@ static uint16_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
 /* Sensor Variables */
+bool success;
+uint16_t raw_data;
 uint16_t        temperature;
 uint16_t        illuminance;
 uint16_t        SN;
@@ -111,16 +114,17 @@ uint16_t        RHDigital;
 uint8_t         txBuffer[4];
 uint8_t         rxBuffer[50];
 
+/* UART handle */
+static UART_Handle      handle;
+static UART_Params      params;
+char c[] = "c\n";
+char five[] = "5\n";
+
+#define TASKSTACKSIZE       640
 /* I2C handle */
 I2C_Handle      i2c;
 I2C_Params      i2cParams;
 I2C_Transaction i2cTransaction;
-
-/* UART handle */
-static UART_Handle      handle;
-static UART_Params      params;
-
-#define TASKSTACKSIZE       640
 
 #define REGISTER_LENGTH                     2
 #define DATA_LENGTH                         2
@@ -181,6 +185,17 @@ bool readI2C(uint8_t ui8Addr, uint8_t txCount, uint8_t rxCount) {
     return(result);
 }
 
+void delay(int number_of_seconds) {
+    // Converting time into milli_seconds
+    int milli_seconds = 1000 * number_of_seconds;
+
+    // Storing start time
+    clock_t start_time = clock();
+
+    // looping till required time is not achieved
+    while (clock() < start_time + milli_seconds);
+}
+
 static void txTaskFunction(UArg arg0, UArg arg1)
 {
 #ifdef POWER_MEASUREMENT
@@ -227,15 +242,15 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         printf("UART did not open");
     }
 //    UART_write(handle, 0, 1);//triggers a measurement that takes about 1 second
-//    char c[] = "c\n";
-//    char five[] = "5\n";
+//    delay(2);
 //    UART_write(handle, c, sizeof(c));//'c'ontinuous data output mode
+//    delay(2);
 //    UART_write(handle, five, sizeof(five));//measurement period
+//    delay(5);
+//    UART_read(handle, rxBuffer, sizeof(rxBuffer));
+//    UART_write(handle, rxBuffer, sizeof(rxBuffer));
 
     while(1) {
-        bool success;
-        uint16_t raw_data;
-
         //temp
         txBuffer[0] = TMP007_REG_ADDR_LOCAL_TEMP;
         success = readI2C(TMP007_I2C_ADDRESS, 1, REGISTER_LENGTH);
@@ -268,11 +283,9 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         e = (raw_data & 0xF000) >> 12;
         illuminance = m * (0.01 * exp2(e));
 
-        //IAQ
-        //UART_read(handle, rxBuffer, sizeof(rxBuffer));
+        //bmi
 
-        //bmp
-        //success = sensor_common_read_reg(ADDR_PRESS_MSB, data, MEAS_DATA_SIZE);
+        //bme
 
         /* Create packet with incrementing sequence number and random payload */
         packet[0] = temperature;

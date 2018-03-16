@@ -1,0 +1,13 @@
+rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs/Debug/
+rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs/Debug/
+tirtos_builds_CC1310_LAUNCHXL_release_ccs/Debug/
+tirtos_builds_CC1310_LAUNCHXL_release_ccs/src/
+.jxbrowser-data/
+.metadata/
+.DS_Store
+RemoteSystemsTempFiles/
+rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs/.DS_Store
+rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs/.DS_Store
+tirtos_builds_CC1310_LAUNCHXL_release_ccs/.DS_Store
+rfPacketRx_CC1310_LAUNCHXL_tirtos_ccs/.settings
+rfPacketTx_CC1310_LAUNCHXL_tirtos_ccs/.settings
