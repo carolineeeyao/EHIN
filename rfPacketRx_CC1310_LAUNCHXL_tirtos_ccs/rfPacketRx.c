@@ -63,17 +63,12 @@
 
 /* Packet RX Configuration */
 #define DATA_ENTRY_HEADER_SIZE 8  /* Constant header size of a Generic Data Entry */
-#define MAX_LENGTH             50 /* Max length byte the radio will accept */
+#define MAX_LENGTH             300 /* Max length byte the radio will accept */
 #define NUM_DATA_ENTRIES       2  /* NOTE: Only two data entries supported at the moment */
 #define NUM_APPENDED_BYTES     2  /* The Data Entries data field will contain:
                                    * 1 Header byte (RF_cmdPropRx.rxConf.bIncludeHdr = 0x1)
                                    * Max 30 payload bytes
                                    * 1 status byte (RF_cmdPropRx.rxConf.bAppendStatus = 0x1) */
-
-/* Packet TX Configuration */
-#define PAYLOAD_LENGTH      30
-
-
 
 /***** Prototypes *****/
 static void rxTaskFunction(UArg arg0, UArg arg1);
@@ -121,7 +116,7 @@ static PIN_Handle pinHandle;
 static UART_Handle      handle;
 static UART_Params      params;
 
-static uint16_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
+static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
 
 /*
  * Application LED pin configuration table:
@@ -204,7 +199,6 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         /* Get current unhandled data entry */
         currentDataEntry = RFQueue_getDataEntry();
 
-
         /* Handle the packet data, located at &currentDataEntry->data:
          * - Length is the first byte with the current configuration
          * - Data starts from the second byte */
@@ -214,8 +208,7 @@ void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e)
         /* Copy the payload + the status byte to the packet variable */
         memcpy(packet, packetDataPointer, (packetLength + 1));
 
-        packet[PAYLOAD_LENGTH - 1] = '\n';
-        printf("h\n");
+        packet[MAX_LENGTH - 1] = '\n';
         PIN_setOutputValue(pinHandle, Board_PIN_LED2,!PIN_getOutputValue(Board_PIN_LED2));
 
         int ret = UART_write(handle, packet, sizeof(packet));

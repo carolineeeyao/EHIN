@@ -80,8 +80,8 @@
 #define TX_TASK_PRIORITY   2
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      30
-#define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 500ms */
+#define PAYLOAD_LENGTH      300
+#define PACKET_INTERVAL     (uint32_t)(16000000*0.5f) /* Set packet interval to sec */
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -101,7 +101,7 @@ static RF_Handle rfHandle;
 static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
 
-static uint16_t packet[PAYLOAD_LENGTH];
+static uint8_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
 // TMP007
@@ -124,25 +124,18 @@ struct bmi160_gyro_t        s_gyroXYZ;
 struct bmi160_accel_t       s_accelXYZ;
 struct bmi160_mag_xyz_s32_t s_magcompXYZ;
 
-// IAQ
-uint16_t        SN;
-uint16_t        PPB;
-uint16_t        TEMP;
-uint16_t        RH;
-uint16_t        RawSensor;
-uint16_t        TempDigital;
-uint16_t        RHDigital;
+//Calibration off-sets
+int8_t accel_off_x;
+int8_t accel_off_y;
+int8_t accel_off_z;
+int16_t gyro_off_x;
+int16_t gyro_off_y;
+int16_t gyro_off_z;
 
 /* I2C handle */
 I2C_Handle      i2c;
 I2C_Params      i2cParams;
 I2C_Transaction i2cTransaction;
-
-/* UART handle */
-static UART_Handle      handle;
-static UART_Params      params;
-char c[] = "c\n";
-char five[] = "5\n";
 
 #define TASKSTACKSIZE       640
 
@@ -176,37 +169,6 @@ void TxTask_init(PIN_Handle inPinHandle)
     txTaskParams.arg0 = (UInt)1000000;
 
     Task_construct(&txTask, txTaskFunction, &txTaskParams, NULL);
-}
-
-bool readI2C(uint8_t ui8Addr, uint8_t txCount, uint8_t rxCount) {
-    bool result = false;
-
-    //Point I2C parameters to correct values.
-    i2cTransaction.slaveAddress = ui8Addr;
-    i2cTransaction.writeBuf = txBuffer;
-    i2cTransaction.writeCount = txCount;
-    i2cTransaction.readBuf = rxBuffer;
-    i2cTransaction.readCount = rxCount;
-    //Perform I2C read
-    result = I2C_transfer(i2c, &i2cTransaction);
-    if (result) {
-        printf("🎊 Yay! 🎊\n");
-    }
-    else {
-        printf("🤬 Boooo!\n");
-    }
-    return(result);
-}
-
-void delay(int number_of_seconds) {
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-
-    // Storing start time
-    clock_t start_time = clock();
-
-    // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds);
 }
 
 static void txTaskFunction(UArg arg0, UArg arg1)
@@ -243,25 +205,19 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     i2cParams.bitRate = I2C_400kHz;
     i2c = I2C_open(Board_I2C0, &i2cParams);
 
-    /* Initialize Uart */
-    UART_Params_init(&params);
-    params.baudRate = 9600;
-    params.writeDataMode = UART_DATA_BINARY;
-    params.readDataMode = UART_DATA_BINARY;
-    params.readReturnMode = UART_RETURN_FULL;
-    params.readEcho = UART_ECHO_OFF;
-    handle = UART_open(Board_UART0, &params);
-    if (!handle) {
-        printf("UART did not open");
-    }
-//    UART_write(handle, 0, 1);//triggers a measurement that takes about 1 second
-//    delay(2);
-//    UART_write(handle, c, sizeof(c));//'c'ontinuous data output mode
-//    delay(2);
-//    UART_write(handle, five, sizeof(five));//measurement period
-//    delay(5);
-//    UART_read(handle, rxBuffer, sizeof(rxBuffer));
-//    UART_write(handle, rxBuffer, sizeof(rxBuffer));
+    /* Initialize the OPT Sensor */
+    sensorOpt3001Init();
+    sensorOpt3001Enable(true);
+
+    /* Initialize the BME Sensor */
+    bme280_data_readout_template();
+    bme280_set_power_mode(BME280_NORMAL_MODE);
+
+    /* Initialize the BMI Sensor */
+    bmi160_initialize_sensor();
+    bmi160_config_running_mode(APPLICATION_NAVIGATION);
+    bmi160_accel_foc_trigger_xyz(0x03, 0x03, 0x01, &accel_off_x, &accel_off_y, &accel_off_z);
+    bmi160_set_foc_gyro_enable(0x01, &gyro_off_x, &gyro_off_y, &gyro_off_z);
 
     while(1) {
         //tmp
@@ -283,11 +239,13 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
 
         /* Create packet with incrementing sequence number and random payload */
-        uint8_t i;
-        for (i = 4; i < PAYLOAD_LENGTH; i++)
-        {
-            packet[i] = 66;
-        }
+        sprintf(packet, "objTemp: %f, convertedLux: %f, actualPres: %d, actualTemp: %u, actualHumidity: %u, accelX: %hi, accelY: %hi, accelZ: %hi, gyroX: %hi, gyroY: %hi, gyroZ: %hi, magX: %d, magY: %d, magZ: %d",
+                    tObjTemp,
+                    convertedLux,
+                    g_u32ActualPress, g_s32ActualTemp, g_u32ActualHumity,
+                    s_accelXYZ.x, s_accelXYZ.y, s_accelXYZ.z,
+                    s_gyroXYZ.x, s_gyroXYZ.y, s_gyroXYZ.z,
+                    s_magcompXYZ.x, s_magcompXYZ.y, s_magcompXYZ.z);
 
         /* Set absolute TX time to utilize automatic power management */
         curtime += PACKET_INTERVAL;
