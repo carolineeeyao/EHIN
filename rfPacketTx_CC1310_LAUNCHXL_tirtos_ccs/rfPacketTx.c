@@ -80,8 +80,8 @@
 #define TX_TASK_PRIORITY   2
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      300
-#define PACKET_INTERVAL     (uint32_t)(16000000*0.5f) /* Set packet interval to sec */
+#define PAYLOAD_LENGTH      256
+#define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 1 sec */
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -107,17 +107,15 @@ static PIN_Handle pinHandle;
 // TMP007
 uint16_t rawTemp;
 uint16_t rawObjTemp;
-float    tObjTemp;
-float    tObjAmb;
 
 // OPT3001
 uint16_t rawData;
-float    convertedLux;
+uint16_t e, m;
 
 // BME280
-s32             g_s32ActualTemp   = 0;
-u32             g_u32ActualPress  = 0;
-u32             g_u32ActualHumity = 0;
+s32     g_s32ActualTemp;
+u32     g_u32ActualPress;
+u32     g_u32ActualHumity;
 
 // BMI160/BMM150
 struct bmi160_gyro_t        s_gyroXYZ;
@@ -221,14 +219,12 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
     while(1) {
         //tmp
-        if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
-            sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
-        }
+        sensorTmp007Read(&rawTemp, &rawObjTemp);
 
         //opt
-        if (sensorOpt3001Read(&rawData)) {
-            sensorOpt3001Convert(rawData, &convertedLux);
-        }
+        sensorOpt3001Read(&rawData);
+        m = rawData & 0x0FFF;
+        e = (rawData & 0xF000) >> 12;
 
         //bme
         bme280_read_pressure_temperature_humidity(&g_u32ActualPress, &g_s32ActualTemp, &g_u32ActualHumity);
@@ -238,10 +234,15 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         bmi160_read_gyro_xyz(&s_gyroXYZ);
         bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
 
+        // - Length is the first byte with the current configuration
+        // - Data starts from the second byte */
+        packet[0] = 255;
         /* Create packet with incrementing sequence number and random payload */
-        sprintf(packet, "objTemp: %f, convertedLux: %f, actualPres: %d, actualTemp: %u, actualHumidity: %u, accelX: %hi, accelY: %hi, accelZ: %hi, gyroX: %hi, gyroY: %hi, gyroZ: %hi, magX: %d, magY: %d, magZ: %d",
-                    tObjTemp,
-                    convertedLux,
+        //sprintf(packet, "objTemp: %f, convertedLux: %f, actualPres: %u, actualTemp: %d, actualHumidity: %u, accelX: %hi, accelY: %hi, accelZ: %hi, gyroX: %hi, gyroY: %hi, gyroZ: %hi, magX: %d, magY: %d, magZ: %d",
+        //when tObjTemp and convertedLux are properly formated as a float the packet does not send. Possible because the conversion from float to string takes too long?
+        sprintf(packet + 1, "%hu,%hu,%hu,%hu,%u,%d,%u,%hi,%hi,%hi,%hi,%hi,%hi,%d,%d,%d",
+                    rawTemp, rawObjTemp,
+                    m, e,
                     g_u32ActualPress, g_s32ActualTemp, g_u32ActualHumity,
                     s_accelXYZ.x, s_accelXYZ.y, s_accelXYZ.z,
                     s_gyroXYZ.x, s_gyroXYZ.y, s_gyroXYZ.z,
@@ -254,8 +255,7 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         /* Send packet */
         RF_EventMask terminationReason = RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropTx,
                                                    RF_PriorityNormal, NULL, 0);
-        
-        
+
         switch(terminationReason)
         {
             case RF_EventCmdDone:
