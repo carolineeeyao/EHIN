@@ -133,8 +133,10 @@ uint16_t        RawSensor;
 uint16_t        TempDigital;
 uint16_t        RHDigital;
 
-//uint8_t         txBuffer[4];
-//uint8_t         rxBuffer[50];
+/* I2C handle */
+I2C_Handle      i2c;
+I2C_Params      i2cParams;
+I2C_Transaction i2cTransaction;
 
 /* UART handle */
 static UART_Handle      handle;
@@ -143,17 +145,6 @@ char c[] = "c\n";
 char five[] = "5\n";
 
 #define TASKSTACKSIZE       640
-/* I2C handle */
-I2C_Handle      i2c;
-I2C_Params      i2cParams;
-I2C_Transaction i2cTransaction;
-
-#define REGISTER_LENGTH                     2
-#define DATA_LENGTH                         2
-#define TMP007_REG_ADDR_LOCAL_TEMP          0x01
-#define TMP007_REG_ADDR_OBJ_TEMP            0x03
-#define OPT3001_RESULT                      0x00
-#define OPT3001_CONFIGURATION               0x01
 
 /*
  * Application LED pin configuration table:
@@ -273,22 +264,25 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 //    UART_write(handle, rxBuffer, sizeof(rxBuffer));
 
     while(1) {
-        //temp
+        //tmp
         if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
             sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
         }
 
         //opt
-
-        //bmi
+        if (sensorOpt3001Read(&rawData)) {
+            sensorOpt3001Convert(rawData, &convertedLux);
+        }
 
         //bme
+        bme280_read_pressure_temperature_humidity(&g_u32ActualPress, &g_s32ActualTemp, &g_u32ActualHumity);
+
+        //bmi
+        bmi160_read_accel_xyz(&s_accelXYZ);
+        bmi160_read_gyro_xyz(&s_gyroXYZ);
+        bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
 
         /* Create packet with incrementing sequence number and random payload */
-//        packet[0] = temperature;
-//        packet[1] = m;
-//        packet[2] = e;
-//        packet[3] = illuminance;
         uint8_t i;
         for (i = 4; i < PAYLOAD_LENGTH; i++)
         {
