@@ -66,6 +66,11 @@
 #include "Board.h"
 #include "string.h"
 #include "stdio.h"
+#include "opt3001.h"
+#include "tmp007.h"
+#include "math.h"
+#include "bme280_support.h"
+#include "bmi160_support.h"
 
 /* Application Header files */
 #include "smartrf_settings/smartrf_settings.h"
@@ -99,11 +104,27 @@ static PIN_State ledPinState;
 static uint16_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
-/* Sensor Variables */
-bool success;
-uint16_t raw_data;
-uint16_t        temperature;
-uint16_t        illuminance;
+// TMP007
+uint16_t rawTemp;
+uint16_t rawObjTemp;
+float    tObjTemp;
+float    tObjAmb;
+
+// OPT3001
+uint16_t rawData;
+float    convertedLux;
+
+// BME280
+s32             g_s32ActualTemp   = 0;
+u32             g_u32ActualPress  = 0;
+u32             g_u32ActualHumity = 0;
+
+// BMI160/BMM150
+struct bmi160_gyro_t        s_gyroXYZ;
+struct bmi160_accel_t       s_accelXYZ;
+struct bmi160_mag_xyz_s32_t s_magcompXYZ;
+
+// IAQ
 uint16_t        SN;
 uint16_t        PPB;
 uint16_t        TEMP;
@@ -111,8 +132,9 @@ uint16_t        RH;
 uint16_t        RawSensor;
 uint16_t        TempDigital;
 uint16_t        RHDigital;
-uint8_t         txBuffer[4];
-uint8_t         rxBuffer[50];
+
+//uint8_t         txBuffer[4];
+//uint8_t         rxBuffer[50];
 
 /* UART handle */
 static UART_Handle      handle;
@@ -252,46 +274,21 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
     while(1) {
         //temp
-        txBuffer[0] = TMP007_REG_ADDR_LOCAL_TEMP;
-        success = readI2C(TMP007_I2C_ADDRESS, 1, REGISTER_LENGTH);
-        if (success) {
-            txBuffer[0] = TMP007_REG_ADDR_OBJ_TEMP;
-            success = readI2C(TMP007_I2C_ADDRESS, 1, REGISTER_LENGTH);
+        if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
+            sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
         }
-        raw_data = (rxBuffer[0]<<6) | (rxBuffer[1]>>2);
-        if (rxBuffer[0] & 0x80) {
-            raw_data |= 0xF000;
-        }
-        temperature = raw_data/32;
 
         //opt
-        txBuffer[0] = OPT3001_CONFIGURATION;
-        txBuffer[1] = 0xC4;//CONFIG_ENABLE
-        txBuffer[2] = 0x10;//CONFIG_ENABLE
-        success = readI2C(OPT3001_I2C_ADDRESS, 3, 0);
-        if (success) {
-            printf("Conf: 0x%x 0x%x (C)\n", rxBuffer[0], rxBuffer[1]);
-        }
-        success = readI2C(OPT3001_I2C_ADDRESS, 1, 2);
-        if (success) {
-            txBuffer[0] = OPT3001_RESULT;
-            success = readI2C(OPT3001_I2C_ADDRESS, 1, DATA_LENGTH);
-        }
-        raw_data = (rxBuffer[0] << 8) | (rxBuffer[0] >> 8 & 0xFF);
-        uint16_t e, m;
-        m = raw_data & 0x0FFF;
-        e = (raw_data & 0xF000) >> 12;
-        illuminance = m * (0.01 * exp2(e));
 
         //bmi
 
         //bme
 
         /* Create packet with incrementing sequence number and random payload */
-        packet[0] = temperature;
-        packet[1] = m;
-        packet[2] = e;
-        packet[3] = illuminance;
+//        packet[0] = temperature;
+//        packet[1] = m;
+//        packet[2] = e;
+//        packet[3] = illuminance;
         uint8_t i;
         for (i = 4; i < PAYLOAD_LENGTH; i++)
         {

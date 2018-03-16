@@ -126,11 +126,11 @@ extern "C" {
 #define Board_WATCHDOG0         CC1310_LAUNCHXL_WATCHDOG0
 
 /* Board specific I2C addresses */
-#define TMP007_I2C_ADDRESS          (0x40)
-#define OPT3001_I2C_ADDRESS         (0x47)
-#define BMP280_I2C_ADDRESS          (0x69)
-#define BMM150_I2C_ADDRESS          (0x13)
-#define BME380_I2C_ADDRESS          (0x77)
+//#define TMP007_I2C_ADDRESS          (0x40)
+//#define OPT3001_I2C_ADDRESS         (0x47)
+//#define BMP280_I2C_ADDRESS          (0x69)
+//#define BMM150_I2C_ADDRESS          (0x13)
+//#define BME380_I2C_ADDRESS          (0x77)
 
 #define Board_SENSORS_BP_TMP_ADDR Board_TMP_ADDR
 
