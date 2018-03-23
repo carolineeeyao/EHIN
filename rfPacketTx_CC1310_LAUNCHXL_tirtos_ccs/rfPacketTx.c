@@ -80,7 +80,7 @@
 #define TX_TASK_PRIORITY   2
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      256
+#define PAYLOAD_LENGTH      255
 #define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 1 sec */
 
 /* Do power measurement */
@@ -107,15 +107,18 @@ static PIN_Handle pinHandle;
 // TMP007
 uint16_t rawTemp;
 uint16_t rawObjTemp;
+float    tObjTemp;
+float    tObjAmb;
 
 // OPT3001
 uint16_t rawData;
 uint16_t e, m;
+float    convertedLux;
 
 // BME280
-s32     g_s32ActualTemp;
-u32     g_u32ActualPress;
-u32     g_u32ActualHumity;
+s32     g_s32ActualTemp = 0;
+u32     g_u32ActualPress = 0;
+u32     g_u32ActualHumity = 0;
 
 // BMI160/BMM150
 struct bmi160_gyro_t        s_gyroXYZ;
@@ -219,10 +222,14 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
     while(1) {
         //tmp
-        sensorTmp007Read(&rawTemp, &rawObjTemp);
+        if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
+            sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
+        }
 
         //opt
-        sensorOpt3001Read(&rawData);
+        if (sensorOpt3001Read(&rawData)) {
+            sensorOpt3001Convert(rawData, &convertedLux);
+        }
         m = rawData & 0x0FFF;
         e = (rawData & 0xF000) >> 12;
 
@@ -236,11 +243,10 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
         // - Length is the first byte with the current configuration
         // - Data starts from the second byte */
-        packet[0] = 255;
         /* Create packet with incrementing sequence number and random payload */
         //sprintf(packet, "objTemp: %f, convertedLux: %f, actualPres: %u, actualTemp: %d, actualHumidity: %u, accelX: %hi, accelY: %hi, accelZ: %hi, gyroX: %hi, gyroY: %hi, gyroZ: %hi, magX: %d, magY: %d, magZ: %d",
         //when tObjTemp and convertedLux are properly formated as a float the packet does not send. Possible because the conversion from float to string takes too long?
-        sprintf(packet + 1, "%hu,%hu,%hu,%hu,%u,%d,%u,%hi,%hi,%hi,%hi,%hi,%hi,%d,%d,%d",
+        sprintf(packet, "%hu,%hu,%hu,%hu,%u,%d,%u,%hi,%hi,%hi,%hi,%hi,%hi,%d,%d,%d",
                     rawTemp, rawObjTemp,
                     m, e,
                     g_u32ActualPress, g_s32ActualTemp, g_u32ActualHumity,
