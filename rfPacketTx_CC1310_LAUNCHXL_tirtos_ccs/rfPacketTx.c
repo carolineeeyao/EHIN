@@ -96,35 +96,17 @@ static RF_Handle rfHandle;
 static PIN_Handle ledPinHandle;
 static PIN_State ledPinState;
 
-static uint16_t packet[PAYLOAD_LENGTH];
+static uint8_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
 /* Sensor Variables */
-bool success;
-uint16_t raw_data;
-uint16_t        temperature;
-uint16_t        illuminance;
-uint16_t        SN;
-uint16_t        PPB;
-uint16_t        TEMP;
-uint16_t        RH;
-uint16_t        RawSensor;
-uint16_t        TempDigital;
-uint16_t        RHDigital;
-uint8_t         txBuffer[4];
-uint8_t         rxBuffer[50];
+uint8_t         rxBuffer[100];
 
 /* UART handle */
 static UART_Handle      handle;
 static UART_Params      params;
-char c[] = "c\n";
-char five[] = "5\n";
 
 #define TASKSTACKSIZE       640
-/* I2C handle */
-I2C_Handle      i2c;
-I2C_Params      i2cParams;
-I2C_Transaction i2cTransaction;
 
 #define REGISTER_LENGTH                     2
 #define DATA_LENGTH                         2
