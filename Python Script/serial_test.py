@@ -1,21 +1,18 @@
 import serial
-import pymysql.cursors
+import MySQLdb
 
 ser = serial.Serial('/dev/tty.usbmodemL2000IS1', 9600)
 ser.readline()
-connection = pymysql.connect(host='localhost',
-                             user='user',
-                             password='passwd',
-                             db='db',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+                     user="root",         # your username
+                     passwd="password",  # your password
+                     db="SeniorDesign")        # name of the data base
+cur = db.cursor()
 while True:
     packet = ser.readline()
     try:
-        with connection.cursor() as cursor:
-            # Create a new record
-            sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-            cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
+        with db.cursor() as cur:
+            cur.execute("SELECT * FROM YOUR_TABLE_NAME")
     finally:
-        connection.close()
+        db.close()
     print packet
