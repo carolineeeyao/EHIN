@@ -74,8 +74,8 @@
 #define TX_TASK_PRIORITY   2
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      30
-#define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 500ms */
+#define PAYLOAD_LENGTH      255
+#define PACKET_INTERVAL     (uint32_t)(4000000*1.0f) /* Set packet interval to 1s */
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -99,7 +99,7 @@ static uint8_t packet[PAYLOAD_LENGTH];
 static PIN_Handle pinHandle;
 
 /* Sensor Variables */
-uint8_t         rxBuffer[100];
+char         rxBuffer[100];
 
 /* UART handle */
 static UART_Handle      handle;
@@ -148,7 +148,7 @@ void TxTask_init(PIN_Handle inPinHandle)
 
 void delay() {
     int i;
-    for(i=0; i< 100000; i++) {
+    for(i=0; i< 1000000; i++) {
     }
 }
 
@@ -192,16 +192,15 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     if (!handle) {
         printf("UART did not open\n");
     }
+    char newLine = '\r';
+    UART_write(handle, &newLine, 1);//triggers a measurement that takes about 1 second
+    delay();
 
     while(1) {
-
+        UART_write(handle, &newLine, 1);
         //these 2 Uart writes don't trigger a uart read of the sensor. I think the first write still triggers the sensor measurement though, but I'm not sure
-        char newLine[] = "\n";
-        UART_write(handle, newLine, 1);//triggers a measurement that takes about 1 second
-        delay();
-        UART_write(handle, newLine, 1);
-        delay();
-        UART_read(handle, rxBuffer, sizeof(rxBuffer));
+
+        UART_read(handle, packet, 64);
 
         /* Set absolute TX time to utilize automatic power management */
         curtime += PACKET_INTERVAL;

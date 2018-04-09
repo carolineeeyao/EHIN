@@ -63,7 +63,7 @@
 
 /* Packet RX Configuration */
 #define DATA_ENTRY_HEADER_SIZE 8  /* Constant header size of a Generic Data Entry */
-#define MAX_LENGTH             50 /* Max length byte the radio will accept */
+#define MAX_LENGTH             255 /* Max length byte the radio will accept */
 #define NUM_DATA_ENTRIES       2  /* NOTE: Only two data entries supported at the moment */
 #define NUM_APPENDED_BYTES     2  /* The Data Entries data field will contain:
                                    * 1 Header byte (RF_cmdPropRx.rxConf.bIncludeHdr = 0x1)
@@ -71,7 +71,7 @@
                                    * 1 status byte (RF_cmdPropRx.rxConf.bAppendStatus = 0x1) */
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      30
+#define PAYLOAD_LENGTH      255
 
 
 
@@ -121,7 +121,7 @@ static PIN_Handle pinHandle;
 static UART_Handle      handle;
 static UART_Params      params;
 
-static uint16_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
+static uint8_t packet[MAX_LENGTH + NUM_APPENDED_BYTES - 1]; /* The length byte is stored in a separate variable */
 
 /*
  * Application LED pin configuration table:
