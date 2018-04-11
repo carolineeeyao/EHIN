@@ -54,7 +54,6 @@
 
 /* TI Drivers */
 #include <ti/drivers/rf/RF.h>
-#include <ti/drivers/I2C.h>
 #include <ti/drivers/PIN.h>
 #include <ti/drivers/UART.h>
 #include <ti/drivers/pin/PINCC26XX.h>
@@ -81,7 +80,11 @@
 
 /* Packet TX Configuration */
 #define PAYLOAD_LENGTH      255
+<<<<<<< HEAD
 #define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 1 sec */
+=======
+#define PACKET_INTERVAL     (uint32_t)(4000000*1.0f) /* Set packet interval to 1s */
+>>>>>>> IAQ
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -138,6 +141,13 @@ I2C_Handle      i2c;
 I2C_Params      i2cParams;
 I2C_Transaction i2cTransaction;
 
+/* Sensor Variables */
+char         rxBuffer[100];
+
+/* UART handle */
+static UART_Handle      handle;
+static UART_Params      params;
+
 #define TASKSTACKSIZE       640
 
 /*
@@ -170,6 +180,12 @@ void TxTask_init(PIN_Handle inPinHandle)
     txTaskParams.arg0 = (UInt)1000000;
 
     Task_construct(&txTask, txTaskFunction, &txTaskParams, NULL);
+}
+
+void delay() {
+    int i;
+    for(i=0; i< 1000000; i++) {
+    }
 }
 
 static void txTaskFunction(UArg arg0, UArg arg1)
@@ -220,6 +236,21 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     bmi160_accel_foc_trigger_xyz(0x03, 0x03, 0x01, &accel_off_x, &accel_off_y, &accel_off_z);
     bmi160_set_foc_gyro_enable(0x01, &gyro_off_x, &gyro_off_y, &gyro_off_z);
 
+    /* Initialize Uart */
+    UART_Params_init(&params);
+    params.baudRate = 9600;
+    params.writeDataMode = UART_DATA_BINARY;
+    params.readDataMode = UART_DATA_BINARY;
+    params.readReturnMode = UART_RETURN_FULL;
+    params.readEcho = UART_ECHO_OFF;
+    handle = UART_open(Board_UART0, &params);
+    if (!handle) {
+        printf("UART did not open\n");
+    }
+    char newLine = '\r';
+    UART_write(handle, &newLine, 1);//triggers a measurement that takes about 1 second
+    delay();
+
     while(1) {
         //tmp
         if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
@@ -240,6 +271,10 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         bmi160_read_accel_xyz(&s_accelXYZ);
         bmi160_read_gyro_xyz(&s_gyroXYZ);
         bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
+
+        //IAQ
+        UART_write(handle, &newLine, 1);
+        UART_read(handle, packet + 150, 64);
 
         // - Length is the first byte with the current configuration
         // - Data starts from the second byte */

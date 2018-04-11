@@ -70,6 +70,10 @@
                                    * Max 30 payload bytes
                                    * 1 status byte (RF_cmdPropRx.rxConf.bAppendStatus = 0x1) */
 
+
+/* Packet TX Configuration */
+#define PAYLOAD_LENGTH      255
+
 /***** Prototypes *****/
 static void rxTaskFunction(UArg arg0, UArg arg1);
 static void callback(RF_Handle h, RF_CmdHandle ch, RF_EventMask e);
