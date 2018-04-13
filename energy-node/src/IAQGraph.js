@@ -1,35 +1,42 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {LineChart} from 'react-easy-chart';
-
+import moment from 'moment';
+import {getInitialData, getUpdatedData} from './Util';
+import axios from 'axios';
 
 export default class IAQGraph extends Component {
 	
 	constructor(props) {
     	super(props);
 
-    	this.val = 12;
+    	this.val = 0;
 
     	this.superData = [
-      		this.generateData(),
-      		this.generateData(),
-      		this.generateData()
+			[],[]
+      		//this.generateData(),
+      		//this.generateData(),
+      		//this.generateData()
     	];
-    	this.superLineColors = ['red', 'green', 'blue']
+		//this.superLineColors = ['red', 'green', 'blue']
+		this.superLineColors = ['blue', 'green']
 
     	this.data = this.superData.slice()
 
     	this.selected = [
-    		true,
-    		true,
-    		true
-    	]
+			true,
+			true
+		]
+		
+		this.lastData = [ 0, 0];
 
     	this.lineColors=this.superLineColors.slice()
 
+		this.update_callback = this.update_callback.bind(this);
     	this.updateData = this.updateData.bind(this);
     	this.checkboxChecked = this.checkboxChecked.bind(this);
-    	this.editData = this.editData.bind(this);
+		this.editData = this.editData.bind(this);
+
 	}
 
 	getRandomArbitrary(min, max) {
@@ -40,14 +47,17 @@ export default class IAQGraph extends Component {
     {
 	    const data = [];
 	    const xs = [];
+		
+		for (let i = 1; i <= 12; i++) {
+		xs.push(i);
+		}
+		
+		xs.forEach((x) => {
+			data.push({ x, y: this.getRandomArbitrary(0, 100) });
+		});
 
-	    for (let i = 1; i <= 12; i++) {
-	      xs.push(i);
-	    }
-	    xs.forEach((x) => {
-	      data.push({ x, y: this.getRandomArbitrary(0, 100) });
-	    });
-	    return data;
+			
+		return data;
     }
 
 
@@ -58,7 +68,7 @@ export default class IAQGraph extends Component {
     	{
     		if(this.selected[x] === false)
     		{
-    			//remove data
+				//remove data
     			this.data.splice(i, 1);
 
     			//remove line
@@ -69,7 +79,7 @@ export default class IAQGraph extends Component {
     	}
     }
 
-    updateData()
+    updateData_old()
     {
     	//console.log("updated data");
     	for(var i = 0; i < this.superData.length; i++)
@@ -77,8 +87,12 @@ export default class IAQGraph extends Component {
 	    	this.superData[i].push({
 	    			x : this.val + 1,
 	    			y : this.getRandomArbitrary(0, 100)
-	    	});
-	    	this.superData[i].shift();
+			});
+			
+			if(this.superData[i].length > 12)
+			{
+				this.superData[i].shift();
+			}
     	}
     	this.val = this.val + 1;
 
@@ -89,12 +103,126 @@ export default class IAQGraph extends Component {
 
     	this.forceUpdate();
 
-    }
+	}
+	
+	update_callback(response)
+	{
+
+		var myData = response["data"];
+
+		var node1Data;
+		var node2Data;
+
+		if(myData[0]["Txid"] == "2")
+		{
+			node1Data = myData[1];
+			node2Data = myData[0];
+		}
+		else
+		{
+			node1Data = myData[0];
+			node2Data = myData[1];
+		}
+
+		
+
+		
+
+		var now = moment().format("mm:ss")
+		
+
+		if(node1Data["Id"] != this.lastData[0])
+		{
+			this.superData[0].push({
+				x : now,
+				y : parseInt(node1Data["Value"], 10)
+			});
+	
+			if(this.superData[0].length > 12)
+			{
+				this.superData[0].shift();
+			}
+		}
+
+		if(node2Data["Id"] != this.lastData[1])
+		{
+			this.superData[1].push({
+				x : now,
+				y : parseInt(node2Data["Value"], 10)
+			});
+	
+			if(this.superData[1].length > 12)
+			{
+				this.superData[1].shift();
+			}
+		}
+
+		if(node1Data["Id"] != this.lastData[0] && node2Data["Id"] == this.lastData[1])
+		{
+			if(this.superData[1].length == 1)
+			{
+				this.superData[1].push({
+					x : now,
+					y : parseInt(node2Data["Value"], 10)
+				});
+			}
+
+			if(this.superData[1].length > 1)
+			{
+				this.superData[1].shift();
+			}
+		}
+
+		if(node1Data["Id"] == this.lastData[0] && node2Data["Id"] != this.lastData[1])
+		{
+			if(this.superData[0].length == 1)
+			{
+				this.superData[0].push({
+					x : now,
+					y : parseInt(node1Data["Value"], 10)
+				});
+			}
+
+			if(this.superData[0].length > 1)
+			{
+				this.superData[0].shift();
+			}
+		}
+		
+		this.lastData[0] = node1Data["Id"];
+		this.lastData[1] = node2Data["Id"];
+
+
+		this.data = this.superData.slice()
+		this.lineColors = this.superLineColors.slice()
+		this.val = this.val + 1;
+
+		this.editData();
+
+		this.forceUpdate();
+	}
+
+	updateData()
+	{
+
+		var BASE_URL = "http://localhost:8080/api/";
+		var table = "IAQ";
+		
+		var my_url = BASE_URL + "getupdateddata/" + table + "/";
+
+		axios.get(my_url)
+		.then((response) => {
+			this.update_callback(response)
+			})
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
 
 
     checkboxChecked(event)
     {
-    	console.log("change");
+    	//console.log("change");
 
     	var x = parseInt(event.target.value, 10);
 
@@ -120,8 +248,9 @@ export default class IAQGraph extends Component {
 		return (
 			<div id="root">
 				<div className="IAQGraph">
-				<h3> Indoor Air Quality (ppm) vs Time (s) </h3>
+				<h3> IAQ (ppb) vs Time (mm:ss) </h3>
 				<LineChart
+					xType={'text'}
 				    axes
 				    grid
 				    verticalGrid
@@ -135,7 +264,7 @@ export default class IAQGraph extends Component {
 				</div>
 
 				<input type = "checkbox" checked = {this.selected[0]} id = "cb_node1" value = "0" onChange = {this.checkboxChecked} />
-				<input type="text" disabled="disabled" size="1" style={{'background-color' : 'red'}} />
+				<input type="text" disabled="disabled" size="1" style={{'background-color' : 'blue'}} />
 				<label for="cb_node1">Node 1</label>
 				<input type="text" disabled="disabled" size="4" style={{'background-color' : 'white', 'border' : 'none'}} />
 
@@ -144,9 +273,6 @@ export default class IAQGraph extends Component {
 				<label for="cb_node2">Node 2</label>
 				<input type="text" disabled="disabled" size="4" style={{'background-color' : 'white', 'border' : 'none'}} />
 			
-				<input type = "checkbox" checked = {this.selected[2]} id = "cb_node3" value = "2" onChange = {this.checkboxChecked} />
-				<input type="text" disabled="disabled" size="1" style={{'background-color' : 'blue'}} />
-				<label for="cb_node3">Node 3</label>
 
 
 				

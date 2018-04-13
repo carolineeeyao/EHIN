@@ -124,34 +124,74 @@ export default class LightIntensityGraph extends Component {
 			node2Data = myData[1];
 		}
 
-		if(node1Data["Id"] == this.lastData[0] || node2Data["Id"] == this.lastData[1])
+		
+
+		
+
+		var now = moment().format("mm:ss")
+		
+
+		if(node1Data["Id"] != this.lastData[0])
 		{
-			return;
+			this.superData[0].push({
+				x : now,
+				y : parseInt(node1Data["Value"], 10)
+			});
+	
+			if(this.superData[0].length > 12)
+			{
+				this.superData[0].shift();
+			}
 		}
 
+		if(node2Data["Id"] != this.lastData[1])
+		{
+			this.superData[1].push({
+				x : now,
+				y : parseInt(node2Data["Value"], 10)
+			});
+	
+			if(this.superData[1].length > 12)
+			{
+				this.superData[1].shift();
+			}
+		}
+
+		if(node1Data["Id"] != this.lastData[0] && node2Data["Id"] == this.lastData[1])
+		{
+			if(this.superData[1].length == 1)
+			{
+				this.superData[1].push({
+					x : now,
+					y : parseInt(node2Data["Value"], 10)
+				});
+			}
+
+			if(this.superData[1].length > 1)
+			{
+				this.superData[1].shift();
+			}
+		}
+
+		if(node1Data["Id"] == this.lastData[0] && node2Data["Id"] != this.lastData[1])
+		{
+			if(this.superData[0].length == 1)
+			{
+				this.superData[0].push({
+					x : now,
+					y : parseInt(node1Data["Value"], 10)
+				});
+			}
+
+			if(this.superData[0].length > 1)
+			{
+				this.superData[0].shift();
+			}
+		}
+		
 		this.lastData[0] = node1Data["Id"];
 		this.lastData[1] = node2Data["Id"];
 
-		var now = moment().format("mm:ss")
-		this.superData[0].push({
-			x : now,
-			y : parseInt(node1Data["Value"], 10)
-		});
-
-		if(this.superData[0].length > 12)
-		{
-			this.superData[0].shift();
-		}
-
-		this.superData[1].push({
-			x : now,
-			y : parseInt(node2Data["Value"], 10)
-		});
-
-		if(this.superData[1].length > 12)
-		{
-			this.superData[1].shift();
-		}
 
 		this.data = this.superData.slice()
 		this.lineColors = this.superLineColors.slice()
@@ -208,7 +248,7 @@ export default class LightIntensityGraph extends Component {
 		return (
 			<div id="root">
 				<div className="LightIntensityGraph">
-				<h3> Light Intensity (lux) vs Time (s) </h3>
+				<h3> Light Intensity (lux) vs Time (mm:ss) </h3>
 				<LineChart
 					xType={'text'}
 				    axes

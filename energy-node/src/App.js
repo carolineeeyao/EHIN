@@ -7,6 +7,7 @@ import HumidityGraph from './HumidityGraph.js'
 import PressureGraph from './PressureGraph.js'
 import IAQGraph from './IAQGraph.js'
 import Additional from './Additional.js'
+import GraphTemplate from './GraphTemplate.js'
 import { TabProvider, Tab, TabPanel, TabList } from 'react-web-tabs';
 import 'react-web-tabs/dist/react-web-tabs.css';
 
@@ -35,6 +36,8 @@ class App extends Component {
             <span className="divider"></span>
             <Tab tabFor="pressure" className="my-tab">Pressure</Tab>
             <span className="divider"></span>
+            <Tab tabFor="iaq" className="my-tab">IAQ</Tab>
+            <span className="divider"></span>
             <Tab tabFor="lightintensity" className="my-tab">Light Intensity</Tab>
             <span className="divider"></span>
             <Tab tabFor="additional" className="my-tab">Additional</Tab>
@@ -52,8 +55,12 @@ class App extends Component {
             <TabPanel tabId="lightintensity">
               <p><LightIntensityGraph></LightIntensityGraph></p>
             </TabPanel>
+            <TabPanel tabId="iaq">
+              <p><IAQGraph></IAQGraph></p>
+            </TabPanel>
             <TabPanel tabId="about">
               <h1>About</h1>
+              <GraphTemplate numNodes={2} graphTitle={'My Title'}></GraphTemplate>
             </TabPanel>
             <TabPanel tabId="additional">
               <p><Additional></Additional></p>
