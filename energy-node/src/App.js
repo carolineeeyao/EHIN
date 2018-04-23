@@ -8,6 +8,7 @@ import PressureGraph from './PressureGraph.js'
 import IAQGraph from './IAQGraph.js'
 import Additional from './Additional.js'
 import GraphTemplate from './GraphTemplate.js'
+import About from './About.js'
 import { TabProvider, Tab, TabPanel, TabList } from 'react-web-tabs';
 import 'react-web-tabs/dist/react-web-tabs.css';
 
@@ -21,8 +22,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Energy Harvesting Node</h1>
+          {/*<img src={logo} className="App-logo" alt="logo" />*/}
+          <br></br>
+          <h1 className="App-title">EHIN: Energy Harvesting IoT Node</h1>
         </header>
 
               <TabProvider defaultTab="temperature">
@@ -59,8 +61,8 @@ class App extends Component {
               <p><IAQGraph></IAQGraph></p>
             </TabPanel>
             <TabPanel tabId="about">
-              <h1>About</h1>
-              <GraphTemplate numNodes={2} graphTitle={'My Title'}></GraphTemplate>
+              {/*<GraphTemplate numNodes={2} graphTitle={'My Title'}></GraphTemplate>*/}
+              <About></About>
             </TabPanel>
             <TabPanel tabId="additional">
               <p><Additional></Additional></p>

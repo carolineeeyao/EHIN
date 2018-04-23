@@ -12,6 +12,21 @@ export default class IAQGraph extends Component {
 
     	this.val = 0;
 
+		this.myData =
+		[
+			[
+			  { x: 1, y: 20 },
+			  { x: 2, y: 10 },
+			  { x: 3, y: 25 }
+			], 
+			[
+			  { x: 1, y: 10 },
+			  { x: 2, y: 12 },
+			  { x: 3, y: 4 }
+			]
+		]
+		
+
     	this.superData = [
 			[],[]
       		//this.generateData(),
@@ -259,7 +274,8 @@ export default class IAQGraph extends Component {
 				    lineColors = {this.lineColors}
 				    width={750}
 				    height={250}
-				    data={this.data}				  
+					data={this.data}
+					//data={this.myData}				  
 				/>
 				</div>
 

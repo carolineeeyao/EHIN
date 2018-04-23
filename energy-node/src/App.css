@@ -9,13 +9,17 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  /*background-color: rgb(28, 218, 240) ;*/
+  /*background-color: #00bef2;*/
+  height: 100px;
   padding: 20px;
   color: white;
 }
 
 .App-title {
-  font-size: 1.5em;
+  font-size: 2.25em;
+  /*font-family: "Times New Roman", Times, serif;*/
+  /*font-family: Comfortaa;*/
 }
 
 .App-intro {
