@@ -79,12 +79,11 @@
 #define TX_TASK_PRIORITY   2
 
 /* Packet TX Configuration */
-#define PAYLOAD_LENGTH      255
-<<<<<<< HEAD
-#define PACKET_INTERVAL     (uint32_t)(8000000*0.5f) /* Set packet interval to 1 sec */
-=======
+#define PAYLOAD_LENGTH      100
+
 #define PACKET_INTERVAL     (uint32_t)(4000000*1.0f) /* Set packet interval to 1s */
->>>>>>> IAQ
+
+#define IAQ
 
 /* Do power measurement */
 //#define POWER_MEASUREMENT
@@ -141,12 +140,11 @@ I2C_Handle      i2c;
 I2C_Params      i2cParams;
 I2C_Transaction i2cTransaction;
 
-/* Sensor Variables */
-char         rxBuffer[100];
-
 /* UART handle */
 static UART_Handle      handle;
 static UART_Params      params;
+
+static uint32_t packetCount;
 
 #define TASKSTACKSIZE       640
 
@@ -184,10 +182,11 @@ void TxTask_init(PIN_Handle inPinHandle)
 
 void delay() {
     int i;
-    for(i=0; i< 1000000; i++) {
+    for(i=0; i< 100000; i++) {
     }
 }
 
+#define POWER_MEASUREMENT
 static void txTaskFunction(UArg arg0, UArg arg1)
 {
 #ifdef POWER_MEASUREMENT
@@ -195,7 +194,7 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     Board_shutDownExtFlash();
 #if !defined(__CC1352R1_LAUNCHXL_BOARD_H__) && !defined(__CC26X2R1_LAUNCHXL_BOARD_H__)
     /* Route out PA active pin to Board_DIO30_SWPWR */
-    PINCC26XX_setMux(ledPinHandle, Board_DIO30_SWPWR, PINCC26XX_MUX_RFC_GPO1);
+    //PINCC26XX_setMux(ledPinHandle, Board_DIO30_SWPWR, PINCC26XX_MUX_RFC_GPO1);
 #endif
 #endif
     uint32_t curtime;
@@ -214,27 +213,10 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     /* Set the frequency */
     RF_postCmd(rfHandle, (RF_Op*)&RF_cmdFs, RF_PriorityNormal, NULL, 0);
 
-    /* Get current time */
-    curtime = RF_getCurrentTime();
-
     /* Create I2C for usage */
     I2C_Params_init(&i2cParams);
     i2cParams.bitRate = I2C_400kHz;
     i2c = I2C_open(Board_I2C0, &i2cParams);
-
-    /* Initialize the OPT Sensor */
-    sensorOpt3001Init();
-    sensorOpt3001Enable(true);
-
-    /* Initialize the BME Sensor */
-    bme280_data_readout_template();
-    bme280_set_power_mode(BME280_NORMAL_MODE);
-
-    /* Initialize the BMI Sensor */
-    bmi160_initialize_sensor();
-    bmi160_config_running_mode(APPLICATION_NAVIGATION);
-    bmi160_accel_foc_trigger_xyz(0x03, 0x03, 0x01, &accel_off_x, &accel_off_y, &accel_off_z);
-    bmi160_set_foc_gyro_enable(0x01, &gyro_off_x, &gyro_off_y, &gyro_off_z);
 
     /* Initialize Uart */
     UART_Params_init(&params);
@@ -244,52 +226,91 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     params.readReturnMode = UART_RETURN_FULL;
     params.readEcho = UART_ECHO_OFF;
     handle = UART_open(Board_UART0, &params);
-    if (!handle) {
-        printf("UART did not open\n");
-    }
+
+    /* Initialize the OPT Sensor */
+    sensorOpt3001Init();
+    /* Initialize the BME Sensor */
+    bme280_data_readout_template();
+    /* Initialize the BMI Sensor */
+    bmi160_initialize_sensor();
+
     char newLine = '\r';
-    UART_write(handle, &newLine, 1);//triggers a measurement that takes about 1 second
-    delay();
+    char exitContinuous = 'c';
+    char lowpower = 's';
+    UART_write(handle, &newLine, 1);
 
+    int i = 0;
     while(1) {
-        //tmp
-        if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
-            sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
+        /* Enable or wake all sensors */
+        sensorOpt3001Enable(true);
+        bme280_set_power_mode(BME280_NORMAL_MODE);
+        bmi160_config_running_mode(APPLICATION_NAVIGATION);
+        bmi160_accel_foc_trigger_xyz(0x03, 0x03, 0x01, &accel_off_x, &accel_off_y, &accel_off_z);
+        bmi160_set_foc_gyro_enable(0x01, &gyro_off_x, &gyro_off_y, &gyro_off_z);
+
+        memset(packet, 0, sizeof(packet));
+
+        if(++packetCount%5 == 0){
+#ifdef IAQ
+            //IAQ
+            //UART_write(handle, &exitContinuous, 1);
+            //UART_write(handle, &newLine, 1);
+            delay();
+            UART_write(handle, &newLine, 1);
+            delay();
+            packet[0] = 'I';
+            packet[1] = 'A';
+            packet[2] = 'Q';
+            UART_read(handle, packet + 3, 64);
+            delay();
+            //UART_write(handle, &lowpower, 1);
+#endif
+        }
+        else{
+            //tmp
+            if (sensorTmp007Read(&rawTemp, &rawObjTemp)) {
+                sensorTmp007Convert(rawTemp, rawObjTemp, &tObjTemp, &tObjAmb);
+            }
+
+            //opt
+            if (sensorOpt3001Read(&rawData)) {
+                sensorOpt3001Convert(rawData, &convertedLux);
+            }
+            m = rawData & 0x0FFF;
+            e = (rawData & 0xF000) >> 12;
+
+            //bme
+            bme280_read_pressure_temperature_humidity(&g_u32ActualPress, &g_s32ActualTemp, &g_u32ActualHumity);
+
+            //bmi
+            bmi160_read_accel_xyz(&s_accelXYZ);
+            bmi160_read_gyro_xyz(&s_gyroXYZ);
+            bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
+            sprintf(packet,"SBP%hu,%hu,%hu,%hu,%u,%d,%u,%hi,%hi,%hi,%hi,%hi,%hi,%d,%d,%d,1",
+                        rawTemp, rawObjTemp,
+                        m, e,
+                        g_u32ActualPress, g_s32ActualTemp, g_u32ActualHumity,
+                        s_accelXYZ.x, s_accelXYZ.y, s_accelXYZ.z,
+                        s_gyroXYZ.x, s_gyroXYZ.y, s_gyroXYZ.z,
+                        s_magcompXYZ.x, s_magcompXYZ.y, s_magcompXYZ.z);
         }
 
-        //opt
-        if (sensorOpt3001Read(&rawData)) {
-            sensorOpt3001Convert(rawData, &convertedLux);
-        }
-        m = rawData & 0x0FFF;
-        e = (rawData & 0xF000) >> 12;
+        i++;
 
-        //bme
-        bme280_read_pressure_temperature_humidity(&g_u32ActualPress, &g_s32ActualTemp, &g_u32ActualHumity);
+        /* Disable or set to sleep all sensors */
+        sensorOpt3001Enable(false);
+        bme280_set_power_mode(BME280_SLEEP_MODE);
+        bmi160_config_running_mode(STANDARD_UI_ADVANCEPOWERSAVE);
+        bmi160_accel_foc_trigger_xyz(0x00, 0x00, 0x00, &accel_off_x, &accel_off_y, &accel_off_z);
+        bmi160_set_foc_gyro_enable(0x00, &gyro_off_x, &gyro_off_y, &gyro_off_z);
 
-        //bmi
-        bmi160_read_accel_xyz(&s_accelXYZ);
-        bmi160_read_gyro_xyz(&s_gyroXYZ);
-        bmi160_bmm150_mag_compensate_xyz(&s_magcompXYZ);
-
-        //IAQ
-        UART_write(handle, &newLine, 1);
-        UART_read(handle, packet + 150, 64);
-
-        // - Length is the first byte with the current configuration
-        // - Data starts from the second byte */
-        /* Create packet with incrementing sequence number and random payload */
-        //sprintf(packet, "objTemp: %f, convertedLux: %f, actualPres: %u, actualTemp: %d, actualHumidity: %u, accelX: %hi, accelY: %hi, accelZ: %hi, gyroX: %hi, gyroY: %hi, gyroZ: %hi, magX: %d, magY: %d, magZ: %d",
-        //when tObjTemp and convertedLux are properly formated as a float the packet does not send. Possible because the conversion from float to string takes too long?
-        sprintf(packet, "%hu,%hu,%hu,%hu,%u,%d,%u,%hi,%hi,%hi,%hi,%hi,%hi,%d,%d,%d",
-                    rawTemp, rawObjTemp,
-                    m, e,
-                    g_u32ActualPress, g_s32ActualTemp, g_u32ActualHumity,
-                    s_accelXYZ.x, s_accelXYZ.y, s_accelXYZ.z,
-                    s_gyroXYZ.x, s_gyroXYZ.y, s_gyroXYZ.z,
-                    s_magcompXYZ.x, s_magcompXYZ.y, s_magcompXYZ.z);
+        /* Close I2C and UART */
+        I2C_close(i2c);
+        UART_close(handle);
 
         /* Set absolute TX time to utilize automatic power management */
+        /* Get current time */
+        curtime = RF_getCurrentTime();
         curtime += PACKET_INTERVAL;
         RF_cmdPropTx.startTime = curtime;
 
@@ -357,6 +378,11 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 #ifndef POWER_MEASUREMENT
         PIN_setOutputValue(pinHandle, Board_PIN_LED1,!PIN_getOutputValue(Board_PIN_LED1));
 #endif
+        /* Open I2C and UART */
+        i2c = I2C_open(Board_I2C0, &i2cParams);
+        handle = UART_open(Board_UART0, &params);
+
+        RF_yield(rfHandle);
     }
 }
 
