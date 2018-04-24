@@ -182,7 +182,7 @@ void TxTask_init(PIN_Handle inPinHandle)
 
 void delay() {
     int i;
-    for(i=0; i< 100000; i++) {
+    for(i=0; i< 200000; i++) {
     }
 }
 
@@ -223,6 +223,7 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     params.baudRate = 9600;
     params.writeDataMode = UART_DATA_BINARY;
     params.readDataMode = UART_DATA_BINARY;
+    params.readTimeout = 400000;
     params.readReturnMode = UART_RETURN_FULL;
     params.readEcho = UART_ECHO_OFF;
     handle = UART_open(Board_UART0, &params);
@@ -235,11 +236,10 @@ static void txTaskFunction(UArg arg0, UArg arg1)
     bmi160_initialize_sensor();
 
     char newLine = '\r';
-    char exitContinuous = 'c';
+    char continuous = 'c';
     char lowpower = 's';
-    UART_write(handle, &newLine, 1);
+    //UART_write(handle, &newLine, 1);
 
-    int i = 0;
     while(1) {
         /* Enable or wake all sensors */
         sensorOpt3001Enable(true);
@@ -250,20 +250,17 @@ static void txTaskFunction(UArg arg0, UArg arg1)
 
         memset(packet, 0, sizeof(packet));
 
-        if(++packetCount%5 == 0){
+        int IAQ_period = 5;
+        packetCount++;
+        if (packetCount%IAQ_period == 0) {
 #ifdef IAQ
             //IAQ
-            //UART_write(handle, &exitContinuous, 1);
-            //UART_write(handle, &newLine, 1);
-            delay();
-            UART_write(handle, &newLine, 1);
-            delay();
             packet[0] = 'I';
             packet[1] = 'A';
             packet[2] = 'Q';
-            UART_read(handle, packet + 3, 64);
-            delay();
-            //UART_write(handle, &lowpower, 1);
+            UART_write(handle, &newLine, 1);
+            UART_read(handle, packet + 3, 100);
+            UART_write(handle, &lowpower, 1);
 #endif
         }
         else{
@@ -294,8 +291,9 @@ static void txTaskFunction(UArg arg0, UArg arg1)
                         s_gyroXYZ.x, s_gyroXYZ.y, s_gyroXYZ.z,
                         s_magcompXYZ.x, s_magcompXYZ.y, s_magcompXYZ.z);
         }
-
-        i++;
+        if (packetCount%IAQ_period == IAQ_period - 1){
+             UART_write(handle, &newLine, 1);
+        }
 
         /* Disable or set to sleep all sensors */
         sensorOpt3001Enable(false);
@@ -305,8 +303,8 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         bmi160_set_foc_gyro_enable(0x00, &gyro_off_x, &gyro_off_y, &gyro_off_z);
 
         /* Close I2C and UART */
-        I2C_close(i2c);
-        UART_close(handle);
+//        I2C_close(i2c);
+//        UART_close(handle);
 
         /* Set absolute TX time to utilize automatic power management */
         /* Get current time */
@@ -379,9 +377,8 @@ static void txTaskFunction(UArg arg0, UArg arg1)
         PIN_setOutputValue(pinHandle, Board_PIN_LED1,!PIN_getOutputValue(Board_PIN_LED1));
 #endif
         /* Open I2C and UART */
-        i2c = I2C_open(Board_I2C0, &i2cParams);
-        handle = UART_open(Board_UART0, &params);
-
+//        i2c = I2C_open(Board_I2C0, &i2cParams);
+//        handle = UART_open(Board_UART0, &params);
         RF_yield(rfHandle);
     }
 }
